@@ -1,25 +1,15 @@
-// var os = require("os");
-
 var sql = null;
 var sqlConfig = {};
-var sqlConnString = "";
 
-// var hostname = os.hostname();
-// if (hostname != "DESKTOP-C0LNOFT") {
-//   // DEV / LOCALHOST - SQL Server Connection
-//   console.log("getting DEVELOPMENT connection");
-//   sql = require("mssql/msnodesqlv8");
-//   sqlConfig = {
-//     driver: "msnodesqlv8",
-//     connectionString:
-//       "Driver={SQL Server Native Client 11.0};Server=DESKTOP-C0LNOFT;Database=BudgetHelper;Integrated Security=True;Trusted_Connection=yes;",
-//   };
-// } else {
+// // DEV / LOCALHOST - SQL Server Connection
+// sql = require("mssql/msnodesqlv8");
+// sqlConfig = {
+//   driver: "msnodesqlv8",
+//   connectionString:
+//     "Driver={SQL Server Native Client 11.0};Server=DESKTOP-C0LNOFT;Database=BudgetHelper;Integrated Security=True;Trusted_Connection=yes;",
+// };
+
 // PRODUCTION / AWS - SQL Server Connection
-//   sql = require("msnodesqlv8");
-//   sqlConnString =
-//     "Driver={SQL Server Native Client 11.0};Server=sql-server-db-1.ctm8otgitadb.us-east-1.rds.amazonaws.com,1433;Uid=admin;Pwd=FG2xnEcDpC8kNLbAfLUw;Database=BudgetHelper;";
-console.log("getting PRODUCTION connection");
 sql = require("mssql");
 sqlConfig = {
   user: "admin",
@@ -35,7 +25,6 @@ sqlConfig = {
     trustServerCertificate: true, // change to true for local dev / self-signed certs
   },
 };
-// }
 
 // This will run a stored procedure and return the results as JSON
 function query(res, spName, params) {
