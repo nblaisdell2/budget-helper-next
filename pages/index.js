@@ -2,7 +2,7 @@ import { UserProvider } from "@auth0/nextjs-auth0";
 import config from "./config/auth0-config.json";
 
 import "tailwindcss/tailwind.css";
-import App from "./components/App";
+import App from "../components/App";
 
 function Home() {
   return (

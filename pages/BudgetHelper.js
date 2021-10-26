@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Widgets from "./components/Widgets";
-import Results from "./components/Results";
+import Widgets from "../components/Widgets";
+import Results from "../components/Results";
 function BudgetHelper() {
   const [widget, setWidget] = useState("Budget Chart");
   const changeWidget = (newWidget) => {

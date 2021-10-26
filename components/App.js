@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import BudgetHelper from "../BudgetHelper";
+import BudgetHelper from "../pages/BudgetHelper";
 import Header from "./Header";
 import Axios from "axios";
-import ynab_config from "../config/ynab_oauth_config.json";
+import ynab_config from "../pages/config/ynab_oauth_config.json";
 import { useUser } from "@auth0/nextjs-auth0";
 import Router, { useRouter } from "next/router";
 
