@@ -5,12 +5,12 @@ export default function handler(req, res) {
 
   console.log(sql);
 
-  let params = [
-    req.body.user_email,
-    req.body.access_token,
-    req.body.expires_in,
-    req.body.refresh_token,
-  ];
+  let params = {
+    UserEmail: req.body.user_email,
+    AccessToken: req.body.access_token,
+    ExpiresIn: req.body.expires_in,
+    RefreshToken: req.body.refresh_token,
+  };
   console.log("  params");
   console.log(params);
 

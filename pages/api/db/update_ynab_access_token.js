@@ -3,12 +3,12 @@ var sql = require("./sqlConfig");
 export default function handler(req, res) {
   console.log("Adding new access/refresh token to database");
 
-  let params = [
-    req.body.user_name,
-    req.body.access_token,
-    req.body.expires_in,
-    req.body.refresh_token,
-  ];
+  let params = {
+    UserEmail: req.body.user_name,
+    AccessToken: req.body.access_token,
+    ExpiresIn: req.body.expires_in,
+    RefreshToken: req.body.refresh_token,
+  };
   console.log("  params");
   console.log(params);
 
