@@ -11,7 +11,7 @@ function Home() {
       <UserProvider
         domain={config.domain}
         clientId={config.clientId}
-        redirectUri="http://localhost:3000"
+        redirectUri={config.redirectUri}
       >
         <App />
       </UserProvider>
