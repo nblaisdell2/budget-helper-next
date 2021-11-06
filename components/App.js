@@ -8,14 +8,18 @@ import Router, { useRouter } from "next/router";
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
+  const [userCategories, setUserCategories] = useState({});
+  const [userCategoryList, setUserCategoryList] = useState([]);
   const [ynabTokens, setYnabTokens] = useState({});
+
   const { user, isLoading } = useUser();
+
   const router = useRouter();
 
-  const saveTokensLocal = (tokenData) => {
-    let keys = Object.keys(tokenData);
+  const saveTokensLocal = (ynabTokens) => {
+    let keys = Object.keys(ynabTokens);
     for (let i = 0; i < keys.length; i++) {
-      sessionStorage.setItem(keys[i], tokenData[keys[i]]);
+      sessionStorage.setItem(keys[i], ynabTokens[keys[i]]);
     }
   };
 
@@ -83,9 +87,10 @@ function App() {
     }
   };
 
-  const getUser = () => {
+  const getUser = (newUserID) => {
     // If the user is logged in, attempt to pull their information from the database (email, monthly amount, ynab tokens, etc.)
     // Otherwise, use sessionStorage to just pull the ynab tokens
+    console.log("what does the user look like on new user?");
     console.log(user);
 
     if (user) {
@@ -93,7 +98,7 @@ function App() {
 
       Axios.post("/api/db/get_user_details/", {
         params: {
-          user_name: "nblaisdell2@gmail.com",
+          user_email: user.email,
         },
       })
         .then((response) => {
@@ -108,15 +113,27 @@ function App() {
               "[APP]      User found in DB! Setting details and token."
             );
 
-            // If a user logs in, be sure to clear the sessionStorage so that when they
-            // log out, it starts a new "session" of the BudgetHelper for an un-logged in user
+            // If a NEW user logs in, if there were any results saved from the previous session, let's save
+            // the results to the database so they don't have to start over.
+            let newUserDetails = { ...response.data[0] };
+
+            if (newUserID !== null) {
+              saveSessionResultsInDB(newUserDetails);
+            }
+
+            // Then, clear the sessionStorage so when they log out, a new session begins and the previous
+            // results are discarded.
+            console.log("About to clear session storage!");
             sessionStorage.clear();
 
-            setUserDetails(response.data[0]);
+            console.log("What are my user details?");
+            console.log(newUserDetails);
+
+            setUserDetails(newUserDetails);
             setYnabTokens({
-              accessToken: response.data[0].AccessToken,
-              expirationDate: response.data[0].ExpirationDate,
-              refreshToken: response.data[0].RefreshToken,
+              accessToken: newUserDetails.AccessToken,
+              expirationDate: newUserDetails.ExpirationDate,
+              refreshToken: newUserDetails.RefreshToken,
             });
           }
         })
@@ -135,6 +152,17 @@ function App() {
       if (existingTokens.accessToken !== null) {
         setYnabTokens(existingTokens);
       }
+
+      console.log(
+        "setting userDetails monthlyAmount from session storage in APP"
+      );
+      let monthlyAmt = sessionStorage.getItem("monthlyAmount");
+      console.log("monthly Amount in session storage");
+      console.log(monthlyAmt);
+
+      setUserDetails({
+        MonthlyAmount: monthlyAmt ? parseInt(monthlyAmt) : 0,
+      });
     }
   };
 
@@ -146,9 +174,229 @@ function App() {
       user_name: user.nickname,
     }).then((response) => {
       console.log("[APP]      User Added!");
+      let newUserID = response.data[0].UserID;
+
+      getUser(newUserID);
     });
   };
 
+  const getCategories = (accToken) => {
+    if (accToken) {
+      console.log("Am i getting categories? " + accToken);
+      Axios.get("/api/ynab/get_budget_categories", {
+        params: {
+          access_token: accToken,
+        },
+      })
+        .then((response) => {
+          console.log("[APP] Got YNAB Categories!");
+          let newCategories = { ...response.data };
+
+          // First, check to see if there are any stored categories
+          // This can be from the database, if logged in, or from sessionStorage otherwise.
+          if (!user) {
+            let storedCategories = sessionStorage.getItem("userList");
+            if (storedCategories) {
+              console.log("found stored categories");
+              console.log(JSON.parse(storedCategories));
+
+              let currUserList = JSON.parse(storedCategories);
+              setUserCategoryList(currUserList);
+
+              for (let i = 0; i < currUserList.length; i++) {
+                let currGroup = newCategories.category_groups?.find(
+                  (x) => x.id == currUserList[i].id
+                );
+
+                if (currGroup) {
+                  console.log("currGroup");
+                  console.log(currGroup);
+
+                  console.log("currGroupUser");
+                  console.log(currUserList[i].categories);
+
+                  for (let j = 0; j < currUserList[i].categories.length; j++) {
+                    let currCat = currGroup.categories.find(
+                      (x) => x.id == currUserList[i].categories[j].id
+                    );
+                    if (currCat) {
+                      currCat.inUserList = true;
+                    }
+                  }
+                }
+              }
+            }
+          } else {
+            sessionStorage.removeItem("userList");
+
+            console.log("Querying Database for Category Details");
+            console.log(userDetails);
+
+            Axios.get("/api/db/get_category_details", {
+              params: {
+                UserID: userDetails.UserID,
+                BudgetID: userDetails.DefaultBudgetID,
+              },
+            }).then((response) => {
+              console.log("Got category details from DB");
+              console.log(response.data);
+
+              let dbUserList = [...response.data];
+
+              // Loop through the YNAB category groups
+              // When one is found in our dbUserList,
+              //  take the name/id from the ynab list and create a new array of categories
+              //  then, loop through each of the found categories, grab the name/id from the ynab list, and append the amount/expensetype/etc.
+              let newUserList = [];
+              let newUserListItem = {};
+              for (let i = 0; i < newCategories.category_groups.length; i++) {
+                let currGroup = newCategories.category_groups[i];
+                let dbGroup = dbUserList.filter(
+                  (x) => x.CategoryGroupID == currGroup.id
+                );
+                if (dbGroup.length > 0) {
+                  newUserListItem = {
+                    id: currGroup.id,
+                    name: currGroup.name,
+                    isExpanded: false,
+                    categories: [],
+                  };
+                  for (let j = 0; j < dbGroup.length; j++) {
+                    let catGroup = dbGroup[j];
+                    let foundCat = currGroup.categories.find(
+                      (x) => x.id == catGroup.CategoryID
+                    );
+                    if (foundCat) {
+                      foundCat.inUserList = true;
+
+                      newUserListItem.categories.push({
+                        id: foundCat.id,
+                        categoryGroupID: foundCat.categoryGroupID,
+                        name: foundCat.name,
+                        categoryAmount: catGroup.CategoryAmount,
+                        expenseType: catGroup.ExpenseType,
+                        includeOnChart: catGroup.IncludeOnChart,
+                        upcomingExpense: catGroup.UpcomingExpense,
+                      });
+                    }
+                  }
+                  newUserList.push(newUserListItem);
+                }
+              }
+
+              setUserCategoryList(newUserList);
+            });
+          }
+
+          console.log("newCategories");
+          console.log(newCategories);
+
+          setUserCategories(newCategories);
+        })
+        .catch((err) => {
+          console.log("[APP] [ERROR]");
+          console.log(err);
+        });
+    }
+  };
+
+  const saveSessionResultsInDB = (userDetails) => {
+    if (Object.keys(userDetails).length > 0) {
+      console.log("about to attempt reading session storage for new user");
+      console.log(userDetails);
+
+      // Setting monthly amount for new user from previous session
+      let sess_monthlyAmt = sessionStorage.getItem("monthlyAmount");
+      if (sess_monthlyAmt) {
+        console.log(
+          "Monthly Amount was set before logging in. Setting Monthly Amount in DB!"
+        );
+
+        userDetails.MonthlyAmount = parseInt(sess_monthlyAmt);
+
+        console.log("Updating Monthly Amount in Database");
+        Axios.post("/api/db/update_monthly_amount", {
+          UserID: userDetails.UserID,
+          MonthlyAmount: userDetails.MonthlyAmount,
+        })
+          .then((repsonse) => {
+            console.log("Updated Monthly amount in DB successfully!");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      // Setting YNAB tokens for new user from previous session
+      let sess_defBudID = sessionStorage.getItem("defaultBudgetID");
+      if (sess_defBudID) {
+        let sess_accToken = sessionStorage.getItem("accessToken");
+        let sess_refToken = sessionStorage.getItem("refreshToken");
+        let sess_expDate = sessionStorage.getItem("expirationDate");
+
+        userDetails.DefaultBudgetID = sess_defBudID;
+        userDetails.AccessToken = sess_accToken;
+        userDetails.RefreshToken = sess_refToken;
+        userDetails.ExpirationDate = sess_expDate;
+
+        console.log(
+          "YNAB Tokens were set before logging in. Setting YNAB details in DB!"
+        );
+        Axios.post("/api/db/update_default_budget_id", {
+          UserID: userDetails.UserID,
+          BudgetID: userDetails.DefaultBudgetID,
+        })
+          .then((repsonse) => {
+            console.log("Default Budget ID Updated in DB!");
+
+            console.log(
+              "User is logged in, so updating YNAB tokens in database, as well."
+            );
+            Axios.post("/api/db/add_ynab_access_token", {
+              user_email: userDetails.UserEmail,
+              access_token: userDetails.AccessToken,
+              expires_in: 7200, // eventually, get this from YNAB in case the number ever changes in the API
+              refresh_token: userDetails.RefreshToken,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // Setting YNAB categories for new user from previous session
+        let sess_userList = sessionStorage.getItem("userList");
+        if (sess_userList) {
+          console.log(
+            "User list set before logging in. Setting user list details in dB!"
+          );
+          console.log(sess_userList);
+
+          Axios.post("/api/db/save_category_results", {
+            UserID: userDetails.UserID,
+            BudgetID: userDetails.DefaultBudgetID,
+            CategoryDetails: sess_userList,
+          })
+            .then((response) => {
+              console.log("Category Details save to database!");
+              console.log(response);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   if (Object.keys(userDetails).length > 0) {
+  //     console.log("userDetails was updated");
+  //     console.log(userDetails);
+
+  //   }
+  // }, [userDetails]);
+
+  // On First Load
   useEffect(() => {
     if (!isLoading) {
       console.log("[APP] App Initializing");
@@ -204,12 +452,16 @@ function App() {
       // console.log(authCode);
 
       console.log("[APP]   Getting User Details");
-      getUser();
+      getUser(null);
     }
   }, [isLoading]);
 
+  // When the accessToken from YNAB is updated/set
   useEffect(() => {
     if (Object.keys(ynabTokens).length !== 0) {
+      console.log("What are my tokens?");
+      console.log(ynabTokens);
+
       console.log("Access Token Changed: " + ynabTokens.accessToken);
 
       // If the YNAB tokens are updated, and the user is not logged in, we should store
@@ -225,16 +477,69 @@ function App() {
       // Then, check to see if the tokens need to be refreshed, based on the expiration date
       // of the access token
       getRefreshToken(ynabTokens);
+
+      if (userDetails.DefaultBudgetID == null) {
+        console.log("Should use YNAB API to get default budget id");
+        Axios.get("/api/ynab/get_budget_id", {
+          params: {
+            access_token: ynabTokens.accessToken,
+          },
+        }).then((response) => {
+          console.log("Got Budget ID");
+          console.log(response.data);
+
+          let newUserDetails = { ...userDetails };
+          newUserDetails.DefaultBudgetID = response.data;
+          setUserDetails(newUserDetails);
+
+          if (user) {
+            Axios.post("/api/db/update_default_budget_id", {
+              UserID: userDetails.UserID,
+              BudgetID: response.data,
+            })
+              .then((repsonse) => {
+                console.log("Default Budget ID Updated in DB!");
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            sessionStorage.setItem("defaultBudgetID", response.data);
+          }
+        });
+      }
+
+      getCategories(ynabTokens.accessToken);
     }
   }, [ynabTokens]);
 
-  //   if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+    if (!user && userCategoryList.length > 0) {
+      console.log(
+        "user is not logged in, so I should update the session storage here."
+      );
+      sessionStorage.setItem("userList", JSON.stringify(userCategoryList));
+    }
+  }, [userCategoryList]);
 
   return (
-    <div>
-      <Header accessToken={ynabTokens.accessToken} />
-      <BudgetHelper />
-    </div>
+    <>
+      {isLoading ? (
+        <div></div>
+      ) : (
+        <div>
+          <Header accessToken={ynabTokens.accessToken} />
+          <BudgetHelper
+            categories={userCategories}
+            setUserCategories={setUserCategories}
+            userCategoryList={userCategoryList}
+            setUserCategoryList={setUserCategoryList}
+            userDetails={userDetails}
+            setUserDetails={setUserDetails}
+          />
+        </div>
+      )}
+    </>
   );
 }
 

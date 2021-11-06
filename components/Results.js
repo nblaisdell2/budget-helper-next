@@ -1,12 +1,40 @@
 import ChartInfo from "./ChartInfo";
 import ChartSection from "./ChartSection";
+import { useUser } from "@auth0/nextjs-auth0";
 
-function Results({ name }) {
+function Results({
+  name,
+  changeWidget,
+  categories,
+  setUserCategories,
+  userCategoryList,
+  setUserCategoryList,
+  userDetails,
+  setUserDetails,
+}) {
+  const { user, isLoading } = useUser();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
-      <div className="flex justify-center h-200">
-        <ChartSection type={name} />
-        <ChartInfo type={name} />
+      <div className="flex min-h-full max-h-[650px]">
+        <ChartSection
+          type={name}
+          userDetails={userDetails}
+          setUserDetails={setUserDetails}
+          userCategoryList={userCategoryList}
+        />
+        <ChartInfo
+          type={name}
+          categories={categories}
+          setUserCategories={setUserCategories}
+          userCategoryList={userCategoryList}
+          setUserCategoryList={setUserCategoryList}
+          userDetails={userDetails}
+        />
       </div>
     </div>
   );

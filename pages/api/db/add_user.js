@@ -5,5 +5,5 @@ export default function handler(req, res) {
     UserEmail: req.body.user_email,
     UserName: req.body.user_name,
   };
-  sql.execute(res, "spBH_addNewUser", params);
+  sql.query(res, "spBH_addNewUser", params);
 }

@@ -2,14 +2,17 @@ var sql = null;
 var sqlConfig = {};
 
 // // DEV / LOCALHOST - SQL Server Connection
+// DONT FORGET TO REINSTALL: npm install msnodesqlv8
 // sql = require("mssql/msnodesqlv8");
 // sqlConfig = {
 //   driver: "msnodesqlv8",
+//   parseJSON: true,
 //   connectionString:
 //     "Driver={SQL Server Native Client 11.0};Server=DESKTOP-C0LNOFT;Database=BudgetHelper;Integrated Security=True;Trusted_Connection=yes;",
 // };
 
 // PRODUCTION / AWS - SQL Server Connection
+// DONT FORGET TO UNINSTALL: npm uninstall msnodesqlv8
 sql = require("mssql");
 sqlConfig = {
   user: "admin",
@@ -31,18 +34,7 @@ function query(res, spName, params) {
   console.log("Attempting to query from stored procedure: '" + spName + "'");
   console.log(params);
 
-  //   sql.open(sqlConnString, function (err, conn) {
-  //     if (err) console.log(err);
-
-  //     var pm = conn.procedureMgr();
-  //     pm.callproc(spName, params, function (err, results, output) {
-  //       if (err) console.log(err);
-  //       console.log("query results");
-  //       console.log(results);
-  //       res.status(200).json(results);
-  //     });
-  //   });
-
+  // PROD path
   sql
     .connect(sqlConfig)
     .then((pool) => {
@@ -63,6 +55,19 @@ function query(res, spName, params) {
       console.log(err);
       res.send("Error");
     });
+
+  // // DEV path
+  // sql.open(sqlConnString, function (err, conn) {
+  //   if (err) console.log(err);
+
+  //   var pm = conn.procedureMgr();
+  //   pm.callproc(spName, params, function (err, results, output) {
+  //     if (err) console.log(err);
+  //     console.log("query results");
+  //     console.log(results);
+  //     res.status(200).json(results);
+  //   });
+  // });
 }
 
 // This function will run a stored procedure, and get no results
@@ -70,18 +75,7 @@ function execute(res, spName, params) {
   console.log("Attempting to run stored procedure: '" + spName + "'");
   console.log(params);
 
-  //   sql.open(sqlConnString, function (err, conn) {
-  //     if (err) console.log(err);
-
-  //     var pm = conn.procedureMgr();
-  //     pm.callproc(spName, params, function (err, results, output) {
-  //       if (err) console.log(err);
-  //       console.log("execute results");
-  //       console.log(results);
-  //       res.status(200).json({ status: "OK" });
-  //     });
-  //   });
-
+  // PROD path
   sql
     .connect(sqlConfig)
     .then((pool) => {
@@ -100,6 +94,19 @@ function execute(res, spName, params) {
       console.log(err);
       res.send("Error");
     });
+
+  // // DEV path
+  // sql.open(sqlConnString, function (err, conn) {
+  //   if (err) console.log(err);
+
+  //   var pm = conn.procedureMgr();
+  //   pm.callproc(spName, params, function (err, results, output) {
+  //     if (err) console.log(err);
+  //     console.log("execute results");
+  //     console.log(results);
+  //     res.status(200).json({ status: "OK" });
+  //   });
+  // });
 }
 
 exports.query = query;

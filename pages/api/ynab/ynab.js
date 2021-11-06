@@ -1,15 +1,30 @@
 const Axios = require("axios");
 var baseURL = "https://api.youneedabudget.com/v1";
 
+module.exports.get_budget_id = function (accToken) {
+  return Axios.get(baseURL + "/budgets/default", {
+    headers: {
+      Authorization: "Bearer " + accToken,
+    },
+  }).then((response) => response.data.data.budget.id);
+};
+
 module.exports.get_budget_categories = function (
   accToken,
   budgetID = "default"
 ) {
+  console.log("Access Token in YNAB code: " + accToken);
+
   return Axios.get(baseURL + "/budgets/" + budgetID + "/categories", {
     headers: {
       Authorization: "Bearer " + accToken,
     },
-  }).then((response) => response.data);
+  })
+    .then((response) => response.data)
+    .catch((err) => {
+      console.log("YNAB API Error");
+      // console.log(err);
+    });
 };
 
 module.exports.get_ynab_category_list = function (
