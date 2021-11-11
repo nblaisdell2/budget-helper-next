@@ -422,7 +422,7 @@ function BudgetChartInfo({
           className="hover:underline cursor-pointer"
           onClick={() => setModalItem("Automation")}
         >
-          {userDetails.NextAutomatedRun == null ? (
+          {user && userDetails.NextAutomatedRun == null ? (
             <div>Automate?</div>
           ) : (
             <div>
