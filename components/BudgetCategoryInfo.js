@@ -42,7 +42,8 @@ function BudgetCategoryInfo({
   //   setShowRegular(true);
   // }
 
-  let amountPercent = (category.categoryAmount / monthlyAmount) * 100;
+  let amountPercent =
+    monthlyAmount == 0 ? 0 : (category.categoryAmount / monthlyAmount) * 100;
   return (
     <div>
       <div className="flex justify-between">
@@ -149,7 +150,7 @@ function BudgetCategoryInfo({
                 if (showRegular && category.expenseType) {
                   let newCat = { ...category };
                   newCat.expenseType = null;
-                  newCat.includeOnChart = null;
+                  newCat.includeOnChart = 1;
                   setCategory(newCat);
                   setChangesMade(true);
                 }

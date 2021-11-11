@@ -2,7 +2,7 @@ var sql = null;
 var sqlConfig = {};
 
 // // DEV / LOCALHOST - SQL Server Connection
-// DONT FORGET TO REINSTALL: npm install msnodesqlv8
+// // DONT FORGET TO REINSTALL: npm install msnodesqlv8
 // sql = require("mssql/msnodesqlv8");
 // sqlConfig = {
 //   driver: "msnodesqlv8",
@@ -34,7 +34,6 @@ function query(res, spName, params) {
   console.log("Attempting to query from stored procedure: '" + spName + "'");
   console.log(params);
 
-  // PROD path
   sql
     .connect(sqlConfig)
     .then((pool) => {
@@ -56,7 +55,6 @@ function query(res, spName, params) {
       res.send("Error");
     });
 
-  // // DEV path
   // sql.open(sqlConnString, function (err, conn) {
   //   if (err) console.log(err);
 
@@ -75,7 +73,6 @@ function execute(res, spName, params) {
   console.log("Attempting to run stored procedure: '" + spName + "'");
   console.log(params);
 
-  // PROD path
   sql
     .connect(sqlConfig)
     .then((pool) => {
@@ -95,7 +92,6 @@ function execute(res, spName, params) {
       res.send("Error");
     });
 
-  // // DEV path
   // sql.open(sqlConnString, function (err, conn) {
   //   if (err) console.log(err);
 

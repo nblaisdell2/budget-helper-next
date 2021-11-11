@@ -9,6 +9,7 @@ function ChartInfo({
   userCategoryList,
   setUserCategoryList,
   userDetails,
+  setUserDetails,
 }) {
   const renderChartInfo = (type) => {
     switch (type) {
@@ -20,6 +21,7 @@ function ChartInfo({
             userCategoryList={userCategoryList}
             setUserCategoryList={setUserCategoryList}
             userDetails={userDetails}
+            setUserDetails={setUserDetails}
           />
         );
       case "Six Month Details":

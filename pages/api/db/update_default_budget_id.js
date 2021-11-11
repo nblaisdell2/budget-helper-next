@@ -10,7 +10,7 @@ export default function handler(req, res) {
   console.log("  params");
   console.log(params);
 
-  sql.execute(res, "spBH_YN_UpdateDefaultBudgetID", params);
+  sql.execute(res, "spBH_UpdateDefaultBudgetID", params);
 
   //   res.status(200).json({ status: "OK" });
 }

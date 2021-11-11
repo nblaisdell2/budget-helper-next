@@ -1,28 +1,13 @@
 import { useState, useEffect } from "react";
-import Modal from "react-modal";
 import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
 
 import BudgetCategoryInfo from "./BudgetCategoryInfo";
-import CategoryModal from "./CategoryModal";
+import MyModal from "./MyModal";
 
 import ChevronDownIcon from "@heroicons/react/outline/ChevronDownIcon";
 import ChevronRightIcon from "@heroicons/react/outline/ChevronRightIcon";
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
-
-const customStyles = {
-  content: {
-    top: "50%",
-    left: "50%",
-    right: "70%",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-  },
-};
-
-Modal.setAppElement("#__next");
-Modal.defaultStyles.overlay.backgroundColor = "rgba(0, 0, 0, 0.7)";
 
 function BudgetChartInfo({
   categories,
@@ -30,24 +15,14 @@ function BudgetChartInfo({
   userCategoryList,
   setUserCategoryList,
   userDetails,
+  setUserDetails,
 }) {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const openModal = () => {
-    setIsOpen(true);
-  };
-  const afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-  };
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const { user, isLoading } = useUser();
-
+  const [ModalItem, setModalItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
-
   const [removedCategories, setRemovedCategories] = useState([]);
+
+  const { user, isLoading } = useUser();
 
   const addToList = (id, level, isChecked) => {
     let newCategories = { ...categories };
@@ -158,7 +133,7 @@ function BudgetChartInfo({
                 ...newCategories.category_groups[i].categories[j],
                 categoryAmount: 0,
                 expenseType: null,
-                includeOnChart: null,
+                includeOnChart: 1,
                 upcomingExpense: null,
               });
             }
@@ -190,28 +165,47 @@ function BudgetChartInfo({
       if (!user) {
         sessionStorage.setItem("userList", JSON.stringify(userList));
       }
-
-      // Note: Instead of saving every time there's a change to the list of categories,
-      //       we'll use a save button on the whole page. That way, people can make changes,
-      //       (add/remove/update info) to experiment with the budget without having to remember
-      //       what to change things back to.
-      // else {
-      //   // save results to DB
-      //   console.log("Should save category results to Database!");
-      //   Axios.post("/api/db/save_category_results", {
-      //     UserID: userDetails.UserID,
-      //     BudgetID: userDetails.DefaultBudgetID,
-      //     CategoryDetails: JSON.stringify(userList),
-      //   })
-      //     .then((response) => {
-      //       console.log("Category Details save to database!");
-      //       console.log(response);
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      // }
     }
+  };
+
+  const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  // a and b are javascript Date objects
+  function dateDiffInDays(a, b) {
+    // Discard the time and time-zone information.
+    const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+    const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+    return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+  }
+
+  const getNextAutoRunString = (nextRun) => {
+    console.log("what is the next run?");
+    console.log(nextRun);
+
+    let strNextRun = "";
+    let dtNextRun = new Date(nextRun);
+
+    console.log("dtNextRun");
+    console.log(dtNextRun);
+    console.log(dtNextRun.getDate());
+    console.log(new Date());
+    console.log(new Date().getDate());
+
+    strNextRun = dtNextRun
+      .toLocaleString()
+      .replace(",", " @")
+      .replace(":00:00", "");
+
+    let numDays = dtNextRun.getDate() - new Date().getDate();
+    if (numDays == 0) {
+      strNextRun +=
+        " (" + (dtNextRun.getHours() - new Date().getHours()) + " hours)";
+    } else {
+      strNextRun += " (" + numDays + " days)";
+    }
+
+    return strNextRun;
   };
 
   useEffect(() => {
@@ -272,6 +266,9 @@ function BudgetChartInfo({
 
   console.log("Monthly Income");
   console.log(userDetails.MonthlyAmount);
+
+  console.log("Curr Modal set");
+  console.log(ModalItem);
 
   return (
     <div>
@@ -368,9 +365,11 @@ function BudgetChartInfo({
                     </td>
                     <td className="text-right font-bold">
                       <span className="mr-10">
-                        {Math.round(
-                          (groupTotal / userDetails.MonthlyAmount) * 100
-                        ) + "%"}
+                        {(userDetails.MonthlyAmount == 0
+                          ? 0
+                          : Math.round(
+                              (groupTotal / userDetails.MonthlyAmount) * 100
+                            )) + "%"}
                       </span>
                     </td>
                   </tr>
@@ -397,10 +396,11 @@ function BudgetChartInfo({
                             </td>
                             <td className="text-right">
                               <span className="mr-10">
-                                {(
-                                  (itemc.categoryAmount /
-                                    userDetails.MonthlyAmount) *
-                                  100
+                                {(userDetails.MonthlyAmount == 0
+                                  ? 0
+                                  : (itemc.categoryAmount /
+                                      userDetails.MonthlyAmount) *
+                                    100
                                 ).toFixed(2) + "%"}
                               </span>
                             </td>
@@ -417,29 +417,39 @@ function BudgetChartInfo({
 
       <hr />
 
-      <div className="flex flex-row justify-between mt-5">
-        <h2>Automate?</h2>
+      <div className="flex flex-row justify-between mt-3">
         <h2
           className="hover:underline cursor-pointer"
-          onClick={() => openModal()}
+          onClick={() => setModalItem("Automation")}
+        >
+          {userDetails.NextAutomatedRun == null ? (
+            <div>Automate?</div>
+          ) : (
+            <div>
+              <div>Next Auto Run At</div>
+              <div>{getNextAutoRunString(userDetails.NextAutomatedRun)}</div>
+            </div>
+          )}
+        </h2>
+        <h2
+          className="hover:underline cursor-pointer"
+          onClick={() => setModalItem("Categories")}
         >
           Add YNAB Categories
         </h2>
       </div>
 
-      <Modal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel="Example Modal"
-      >
-        <CategoryModal
-          categories={categories}
-          closeModal={closeModal}
-          addToList={addToList}
-        />
-      </Modal>
+      <MyModal
+        currModal={ModalItem}
+        setCurrModal={setModalItem}
+        categories={categories}
+        addToList={addToList}
+        userCategoryList={userCategoryList}
+        userDetails={userDetails}
+        // userID={userDetails.UserID}
+        // budgetID={userDetails.DefaultBudgetID}
+        setUserDetails={setUserDetails}
+      />
     </div>
   );
 }

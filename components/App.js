@@ -388,14 +388,6 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   if (Object.keys(userDetails).length > 0) {
-  //     console.log("userDetails was updated");
-  //     console.log(userDetails);
-
-  //   }
-  // }, [userDetails]);
-
   // On First Load
   useEffect(() => {
     if (!isLoading) {
@@ -523,23 +515,17 @@ function App() {
   }, [userCategoryList]);
 
   return (
-    <>
-      {isLoading ? (
-        <div></div>
-      ) : (
-        <div>
-          <Header accessToken={ynabTokens.accessToken} />
-          <BudgetHelper
-            categories={userCategories}
-            setUserCategories={setUserCategories}
-            userCategoryList={userCategoryList}
-            setUserCategoryList={setUserCategoryList}
-            userDetails={userDetails}
-            setUserDetails={setUserDetails}
-          />
-        </div>
-      )}
-    </>
+    <div>
+      <Header accessToken={ynabTokens.accessToken} />
+      <BudgetHelper
+        categories={userCategories}
+        setUserCategories={setUserCategories}
+        userCategoryList={userCategoryList}
+        setUserCategoryList={setUserCategoryList}
+        userDetails={userDetails}
+        setUserDetails={setUserDetails}
+      />
+    </div>
   );
 }
 

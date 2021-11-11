@@ -34,6 +34,7 @@ function Results({
           userCategoryList={userCategoryList}
           setUserCategoryList={setUserCategoryList}
           userDetails={userDetails}
+          setUserDetails={setUserDetails}
         />
       </div>
     </div>

@@ -1,5 +1,3 @@
-import { Link } from "next/link";
-
 import ynab_config from "../pages/config/ynab_oauth_config.json";
 import { useUser } from "@auth0/nextjs-auth0";
 
