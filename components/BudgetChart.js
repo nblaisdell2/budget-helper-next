@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
 import { Chart } from "react-google-charts";
+import getCategoryAmountModified from "../utils.js";
 
 function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const { user, isLoading } = useUser();
@@ -32,32 +33,9 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
       let newGrandTotal = 0;
       for (let i = 0; i < userCategoryList.length; i++) {
         for (let j = 0; j < userCategoryList[i].categories.length; j++) {
-          let catAmt = userCategoryList[i].categories[j]?.categoryAmount;
-          if (userCategoryList[i].categories[j]?.expenseType) {
-            switch (userCategoryList[i].categories[j]?.expenseType) {
-              case "Monthly":
-                catAmt = catAmt;
-                break;
-              case "Every 2 Months":
-                catAmt /= 2;
-                break;
-              case "Every 3 Months":
-                catAmt /= 3;
-                break;
-              case "Every 6 Months":
-                catAmt /= 6;
-                break;
-              case "Yearly":
-                catAmt /= 12;
-                break;
-            }
-            if (
-              userCategoryList[i].categories[j].includeOnChart == 0 ||
-              userCategoryList[i].categories[j].includeOnChart == null
-            ) {
-              catAmt = 0;
-            }
-          }
+          let catAmt = getCategoryAmountModified(
+            userCategoryList[i].categories[j]
+          );
 
           newGrandTotal += catAmt;
         }
@@ -94,32 +72,9 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
       rowCols.push(userCategoryList[i].name);
       let catAmtGroup = 0;
       for (let j = 0; j < userCategoryList[i].categories.length; j++) {
-        let catAmt = userCategoryList[i].categories[j]?.categoryAmount;
-        if (userCategoryList[i].categories[j]?.expenseType) {
-          switch (userCategoryList[i].categories[j]?.expenseType) {
-            case "Monthly":
-              catAmt = catAmt;
-              break;
-            case "Every 2 Months":
-              catAmt /= 2;
-              break;
-            case "Every 3 Months":
-              catAmt /= 3;
-              break;
-            case "Every 6 Months":
-              catAmt /= 6;
-              break;
-            case "Yearly":
-              catAmt /= 12;
-              break;
-          }
-          if (
-            userCategoryList[i].categories[j]?.includeOnChart == 0 ||
-            userCategoryList[i].categories[j]?.includeOnChart == null
-          ) {
-            catAmt = 0;
-          }
-        }
+        let catAmt = getCategoryAmountModified(
+          userCategoryList[i].categories[j]
+        );
         catAmtGroup += catAmt;
       }
       rowData.push(catAmtGroup);
@@ -140,32 +95,9 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
     for (let i = 0; i < userCategoryList.length; i++) {
       for (let j = 0; j < userCategoryList[i].categories.length; j++) {
         rowCols.push(userCategoryList[i].categories[j].name);
-        let catAmt = userCategoryList[i].categories[j]?.categoryAmount;
-        if (userCategoryList[i].categories[j]?.expenseType) {
-          switch (userCategoryList[i].categories[j]?.expenseType) {
-            case "Monthly":
-              catAmt = catAmt;
-              break;
-            case "Every 2 Months":
-              catAmt /= 2;
-              break;
-            case "Every 3 Months":
-              catAmt /= 3;
-              break;
-            case "Every 6 Months":
-              catAmt /= 6;
-              break;
-            case "Yearly":
-              catAmt /= 12;
-              break;
-          }
-          if (
-            userCategoryList[i].categories[j]?.includeOnChart == 0 ||
-            userCategoryList[i].categories[j]?.includeOnChart == null
-          ) {
-            catAmt = 0;
-          }
-        }
+        let catAmt = getCategoryAmountModified(
+          userCategoryList[i].categories[j]
+        );
         rowData.push(catAmt);
       }
     }

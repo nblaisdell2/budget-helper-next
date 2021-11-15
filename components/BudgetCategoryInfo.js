@@ -1,7 +1,6 @@
 import ArrowLeft from "@heroicons/react/outline/ArrowLeftIcon";
 import { useEffect, useState } from "react";
 import DateTimePicker from "./DateTimePicker";
-import getCategoryAmountModified from "../utils.js";
 
 function BudgetCategoryInfo({
   category,
@@ -11,9 +10,6 @@ function BudgetCategoryInfo({
 }) {
   console.log("passed in category");
   console.log(category);
-
-  console.log("getting category amount modified");
-  console.log(getCategoryAmountModified(category));
 
   const [showUpcoming, setShowUpcoming] = useState(
     category.upcomingExpense !== null
