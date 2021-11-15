@@ -269,6 +269,9 @@ function App() {
                     if (foundCat) {
                       foundCat.inUserList = true;
 
+                      console.log("Loading category");
+                      console.log(catGroup);
+
                       newUserListItem.categories.push({
                         id: foundCat.id,
                         categoryGroupID: foundCat.categoryGroupID,
@@ -277,6 +280,10 @@ function App() {
                         expenseType: catGroup.ExpenseType,
                         includeOnChart: catGroup.IncludeOnChart,
                         upcomingExpense: catGroup.UpcomingExpense,
+                        expenseDate: catGroup.ExpenseDate,
+                        expenseUpdateTime: catGroup.ExpenseUpdateTime,
+                        repeatFreqNum: catGroup.RepeatFreqNum,
+                        repeatFreqType: catGroup.RepeatFreqType,
                       });
                     }
                   }

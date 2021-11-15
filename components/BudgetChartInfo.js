@@ -97,6 +97,10 @@ function BudgetChartInfo({
               expenseType: existingCat.expenseType,
               includeOnChart: existingCat.includeOnChart,
               upcomingExpense: existingCat.upcomingExpense,
+              expenseDate: existingCat.expenseDate,
+              expenseUpdateTime: existingCat.expenseUpdateTime,
+              repeatFreqNum: existingCat.repeatFreqNum,
+              repeatFreqType: existingCat.repeatFreqType,
             });
           } else {
             console.log("new one here");
@@ -127,14 +131,22 @@ function BudgetChartInfo({
                 expenseType: rem.expenseType,
                 includeOnChart: rem.includeOnChart,
                 upcomingExpense: rem.upcomingExpense,
+                expenseDate: rem.expenseDate,
+                expenseUpdateTime: rem.expenseUpdateTime,
+                repeatFreqNum: rem.repeatFreqNum,
+                repeatFreqType: rem.repeatFreqType,
               });
             } else {
               currItemList.push({
                 ...newCategories.category_groups[i].categories[j],
                 categoryAmount: 0,
                 expenseType: null,
-                includeOnChart: 1,
+                includeOnChart: null,
                 upcomingExpense: null,
+                expenseDate: null,
+                expenseUpdateTime: null,
+                repeatFreqNum: null,
+                repeatFreqType: null,
               });
             }
           }
@@ -219,10 +231,14 @@ function BudgetChartInfo({
           ?.categories.find((x) => x.id == selectedCategory.id);
         // console.log("newCat");
         // console.log(newCat);
-        newCat.categoryAmount = selectedCategory.categoryAmount;
-        newCat.expenseType = selectedCategory.expenseType;
-        newCat.includeOnChart = selectedCategory.includeOnChart;
-        newCat.upcomingExpense = selectedCategory.upcomingExpense;
+        let catKeys = Object.keys(selectedCategory);
+        for (let i = 0; i < catKeys.length; i++) {
+          newCat[catKeys[i]] = selectedCategory[catKeys[i]];
+        }
+        // newCat.categoryAmount = selectedCategory.categoryAmount;
+        // newCat.expenseType = selectedCategory.expenseType;
+        // newCat.includeOnChart = selectedCategory.includeOnChart;
+        // newCat.upcomingExpense = selectedCategory.upcomingExpense;
 
         // console.log("newCat - after");
         // console.log(newCat);
