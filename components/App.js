@@ -261,12 +261,12 @@ function App() {
                     isExpanded: false,
                     categories: [],
                   };
-                  for (let j = 0; j < dbGroup.length; j++) {
-                    let catGroup = dbGroup[j];
-                    let foundCat = currGroup.categories.find(
-                      (x) => x.id == catGroup.CategoryID
+                  for (let j = 0; j < currGroup.categories.length; j++) {
+                    let foundCat = currGroup.categories[j];
+                    let catGroup = dbGroup.find(
+                      (x) => x.CategoryID == currGroup.categories[j].id
                     );
-                    if (foundCat) {
+                    if (catGroup) {
                       foundCat.inUserList = true;
 
                       console.log("Loading category");
