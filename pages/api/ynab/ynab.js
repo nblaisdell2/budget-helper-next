@@ -23,7 +23,7 @@ module.exports.get_budget_categories = function (
     .then((response) => response.data)
     .catch((err) => {
       console.log("YNAB API Error");
-      // console.log(err);
+      console.log(err);
     });
 };
 

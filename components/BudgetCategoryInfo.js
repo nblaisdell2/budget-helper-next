@@ -231,6 +231,26 @@ function BudgetCategoryInfo({
                 {"  "}
                 <span>Include on Chart?</span>
               </div>
+              <div
+                className="cursor-pointer"
+                onClick={(e) => {
+                  let newCat = getNewCategory(
+                    "useCurrentMonth",
+                    category.useCurrentMonth == 0 ||
+                      category.useCurrentMonth == null
+                      ? 1
+                      : 0
+                  );
+                  setCategory(newCat);
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={category.useCurrentMonth == 1}
+                />
+                {"  "}
+                <span>Always Use Current Month?</span>
+              </div>
             </div>
             <div className="flex justify-center">
               {category.expenseType == "By Date" && (

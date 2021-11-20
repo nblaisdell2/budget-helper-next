@@ -5,6 +5,8 @@ import Axios from "axios";
 import BudgetCategoryInfo from "./BudgetCategoryInfo";
 import MyModal from "./MyModal";
 
+import getCategoryAmountModified from "../utils";
+
 import ChevronDownIcon from "@heroicons/react/outline/ChevronDownIcon";
 import ChevronRightIcon from "@heroicons/react/outline/ChevronRightIcon";
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
@@ -101,6 +103,7 @@ function BudgetChartInfo({
               expenseUpdateTime: existingCat.expenseUpdateTime,
               repeatFreqNum: existingCat.repeatFreqNum,
               repeatFreqType: existingCat.repeatFreqType,
+              useCurrentMonth: existingCat.useCurrentMonth,
             });
           } else {
             console.log("new one here");
@@ -135,6 +138,7 @@ function BudgetChartInfo({
                 expenseUpdateTime: rem.expenseUpdateTime,
                 repeatFreqNum: rem.repeatFreqNum,
                 repeatFreqType: rem.repeatFreqType,
+                useCurrentMonth: rem.useCurrentMonth,
               });
             } else {
               currItemList.push({
@@ -147,6 +151,7 @@ function BudgetChartInfo({
                 expenseUpdateTime: null,
                 repeatFreqNum: null,
                 repeatFreqType: null,
+                useCurrentMonth: 0,
               });
             }
           }
@@ -350,6 +355,9 @@ function BudgetChartInfo({
               let groupTotal = item.categories.reduce((a, b) => {
                 return a + b.categoryAmount;
               }, 0);
+              let groupTotalModified = item.categories.reduce((a, b) => {
+                return a + getCategoryAmountModified(b);
+              }, 0);
 
               return (
                 <>
@@ -377,14 +385,17 @@ function BudgetChartInfo({
                       </span>
                     </td>
                     <td className="text-right font-bold">
-                      <span className="mr-1">{"$" + groupTotal}</span>
+                      <span className="mr-1">
+                        {"$" + groupTotalModified.toFixed(0)}
+                      </span>
                     </td>
                     <td className="text-right font-bold">
                       <span className="mr-10">
                         {(userDetails.MonthlyAmount == 0
                           ? 0
                           : Math.round(
-                              (groupTotal / userDetails.MonthlyAmount) * 100
+                              (groupTotalModified / userDetails.MonthlyAmount) *
+                                100
                             )) + "%"}
                       </span>
                     </td>
@@ -393,6 +404,9 @@ function BudgetChartInfo({
                   <>
                     {item.isExpanded &&
                       item.categories.map((itemc, ci) => {
+                        let catAmtMod = getCategoryAmountModified(itemc);
+                        let showOther = itemc.categoryAmount !== catAmtMod;
+
                         return (
                           <tr
                             key={itemc.id}
@@ -407,15 +421,20 @@ function BudgetChartInfo({
                             </td>
                             <td className="text-right">
                               <span className="mr-1">
-                                {"$" + itemc.categoryAmount}
+                                {showOther
+                                  ? "$" +
+                                    catAmtMod.toFixed(2) +
+                                    " / ($" +
+                                    itemc.categoryAmount +
+                                    ")"
+                                  : "$" + catAmtMod.toFixed(2)}
                               </span>
                             </td>
                             <td className="text-right">
                               <span className="mr-10">
                                 {(userDetails.MonthlyAmount == 0
                                   ? 0
-                                  : (itemc.categoryAmount /
-                                      userDetails.MonthlyAmount) *
+                                  : (catAmtMod / userDetails.MonthlyAmount) *
                                     100
                                 ).toFixed(2) + "%"}
                               </span>

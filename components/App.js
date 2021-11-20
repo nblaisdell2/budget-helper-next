@@ -284,6 +284,7 @@ function App() {
                         expenseUpdateTime: catGroup.ExpenseUpdateTime,
                         repeatFreqNum: catGroup.RepeatFreqNum,
                         repeatFreqType: catGroup.RepeatFreqType,
+                        useCurrentMonth: catGroup.UseCurrentMonth,
                       });
                     }
                   }

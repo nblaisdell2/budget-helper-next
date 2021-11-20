@@ -13,6 +13,7 @@ export default function handler(req, res) {
     .get_budget_categories(req.query.access_token)
     .then((response) => {
       console.log("Got Budget Categories from YNAB!");
+      console.log(response);
 
       let newCategories = {
         serverKnowledge: response.data.server_knowledge,

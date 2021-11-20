@@ -27,7 +27,7 @@ function ChartSection({ type, userDetails, setUserDetails, userCategoryList }) {
   }
 
   return (
-    <div className="w-2/3 border-2 border-gray-400 p-5 rounded-3xl mr-3 shadow-2xl h-[640px]">
+    <div className="w-1/2 border-2 border-gray-400 p-5 rounded-3xl mr-3 shadow-2xl h-[640px]">
       {renderChartDetails(type)}
     </div>
   );
