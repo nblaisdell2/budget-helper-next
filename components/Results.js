@@ -6,6 +6,7 @@ function Results({
   name,
   changeWidget,
   categories,
+  sixMonthDetails,
   setUserCategories,
   userCategoryList,
   setUserCategoryList,
@@ -23,6 +24,8 @@ function Results({
       <div className="flex min-h-full max-h-[650px]">
         <ChartSection
           type={name}
+          categories={categories}
+          sixMonthDetails={sixMonthDetails}
           userDetails={userDetails}
           setUserDetails={setUserDetails}
           userCategoryList={userCategoryList}
@@ -30,6 +33,7 @@ function Results({
         <ChartInfo
           type={name}
           categories={categories}
+          sixMonthDetails={sixMonthDetails}
           setUserCategories={setUserCategories}
           userCategoryList={userCategoryList}
           setUserCategoryList={setUserCategoryList}

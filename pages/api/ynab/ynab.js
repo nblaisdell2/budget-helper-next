@@ -27,6 +27,21 @@ module.exports.get_budget_categories = function (
     });
 };
 
+module.exports.get_budget_months = function (accToken, budgetID = "default") {
+  console.log("Getting Budget Months from YNAB!");
+
+  return Axios.get(baseURL + "/budgets/" + budgetID, {
+    headers: {
+      Authorization: "Bearer " + accToken,
+    },
+  })
+    .then((response) => response.data)
+    .catch((err) => {
+      console.log("YNAB API Error");
+      console.log(err);
+    });
+};
+
 module.exports.get_ynab_category_list = function (
   accToken,
   budgetID = "default"

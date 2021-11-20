@@ -5,6 +5,7 @@ import Axios from "axios";
 import ynab_config from "../pages/config/ynab_oauth_config.json";
 import { useUser } from "@auth0/nextjs-auth0";
 import Router, { useRouter } from "next/router";
+import getCategoryAmountModified from "../utils";
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
@@ -12,9 +13,93 @@ function App() {
   const [userCategoryList, setUserCategoryList] = useState([]);
   const [ynabTokens, setYnabTokens] = useState({});
 
+  const [sixMonthDetails, setSixMonthDetails] = useState({
+    monthsAheadTarget: 6,
+    targetMetCount: 0,
+    categories: [],
+  });
+
   const { user, isLoading } = useUser();
 
   const router = useRouter();
+
+  const setYnabMonthDetails = (
+    categoryList,
+    monthsAheadTarget,
+    ynabMonthDetails
+  ) => {
+    let sixMoDt = {
+      monthsAheadTarget: monthsAheadTarget,
+    };
+
+    let newCats = [];
+    let sixCats = [...categoryList];
+    for (let i = 0; i < sixCats.length; i++) {
+      let currCats = [...sixCats[i].categories];
+      for (let j = 0; j < currCats.length; j++) {
+        if (currCats[j].expenseType == null) {
+          currCats.splice(j, 1);
+        }
+      }
+      newCats.push(...currCats);
+    }
+
+    let targetMetCount = 0;
+    for (let i = 0; i < newCats.length; i++) {
+      let currCat = newCats[i];
+      currCat.monthsAhead = 0;
+
+      console.log("Getting months ahead for " + currCat.name);
+      console.log(ynabMonthDetails);
+
+      let monthCat = null;
+      if (currCat.expenseType == "Monthly") {
+        monthCat = ynabMonthDetails[0].categories.find(
+          (x) =>
+            x.category_group_id == currCat.categoryGroupID && x.id == currCat.id
+        );
+        currCat.monthsAhead =
+          Math.floor(monthCat.balance / 1000 / currCat.categoryAmount) - 1;
+      } else {
+        for (let j = ynabMonthDetails.length - 2; j >= 0; j--) {
+          console.log("month");
+          console.log(ynabMonthDetails[j].month);
+
+          monthCat = ynabMonthDetails[j].categories.find(
+            (x) =>
+              x.category_group_id == currCat.categoryGroupID &&
+              x.id == currCat.id
+          );
+
+          let catAmt = currCat.categoryAmount;
+          if (currCat.repeatFreqType == "Years") {
+            catAmt /= currCat.repeatFreqNum * 12;
+          } else {
+            catAmt /= currCat.repeatFreqNum;
+          }
+
+          console.log(catAmt);
+          console.log(monthCat.budgeted / 1000);
+
+          if (monthCat.budgeted / 1000 >= catAmt) {
+            currCat.monthsAhead += 1;
+          }
+        }
+      }
+
+      if (currCat.monthsAhead >= monthsAheadTarget) {
+        targetMetCount += 1;
+      }
+    }
+
+    sixMoDt.categories = newCats;
+    sixMoDt.targetMetCount = targetMetCount;
+
+    console.log("setting six month details");
+    console.log(sixMoDt);
+
+    setSixMonthDetails({ ...sixMoDt });
+  };
 
   const saveTokensLocal = (ynabTokens) => {
     let keys = Object.keys(ynabTokens);
@@ -190,7 +275,10 @@ function App() {
       })
         .then((response) => {
           console.log("[APP] Got YNAB Categories!");
-          let newCategories = { ...response.data };
+          console.log(response);
+
+          let newCategories = { ...response.data.newCategories };
+          let monthDetails = [...response.data.monthDetails];
 
           // First, check to see if there are any stored categories
           // This can be from the database, if logged in, or from sessionStorage otherwise.
@@ -293,6 +381,9 @@ function App() {
               }
 
               setUserCategoryList(newUserList);
+
+              const monthsAheadTarget = 6;
+              setYnabMonthDetails(newUserList, monthsAheadTarget, monthDetails);
             });
           }
 
@@ -527,6 +618,7 @@ function App() {
       <Header accessToken={ynabTokens.accessToken} />
       <BudgetHelper
         categories={userCategories}
+        sixMonthDetails={sixMonthDetails}
         setUserCategories={setUserCategories}
         userCategoryList={userCategoryList}
         setUserCategoryList={setUserCategoryList}

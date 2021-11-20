@@ -5,6 +5,7 @@ import UpcomingExpensesInfo from "./UpcomingExpensesInfo";
 function ChartInfo({
   type,
   categories,
+  sixMonthDetails,
   setUserCategories,
   userCategoryList,
   setUserCategoryList,
@@ -25,7 +26,7 @@ function ChartInfo({
           />
         );
       case "Six Month Details":
-        return <SixMonthInfo />;
+        return <SixMonthInfo sixMonthDetails={sixMonthDetails} />;
       case "Upcoming Expenses":
         return <UpcomingExpensesInfo />;
       default:
@@ -34,7 +35,7 @@ function ChartInfo({
   };
 
   return (
-    <div className="w-1/2 border-2 border-gray-400 p-5 rounded-3xl ml-3 shadow-2xl h-[640px] ">
+    <div className="w-2/5 border-2 border-gray-400 p-5 rounded-3xl ml-3 shadow-2xl h-[640px] ">
       {renderChartInfo(type, categories)}
     </div>
   );

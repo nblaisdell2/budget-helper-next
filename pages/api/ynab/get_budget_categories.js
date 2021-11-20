@@ -8,6 +8,8 @@ const unwantedCategories = [
 
 export default function handler(req, res) {
   console.log("Getting YNAB Categories");
+  let categoryDetails = null;
+  let monthDetails = null;
 
   ynab
     .get_budget_categories(req.query.access_token)
@@ -56,7 +58,40 @@ export default function handler(req, res) {
         }
       }
 
-      res.status(200).json(newCategories);
+      categoryDetails = { ...newCategories };
+
+      // res.status(200).json(newCategories);
+    })
+    .then(() => {
+      ynab.get_budget_months(req.query.access_token).then((response) => {
+        monthDetails = response.data.budget.months;
+        let newMonthDetails = [];
+
+        let today = new Date();
+        today.setDate(1);
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        for (let i = 0; i < monthDetails.length; i++) {
+          if (monthDetails[i].budgeted > 0) {
+            let ynMonth = new Date(monthDetails[i].month);
+            if (
+              ynMonth.getFullYear() > today.getFullYear() ||
+              (ynMonth.getFullYear() == today.getFullYear() &&
+                ynMonth.getMonth() + 1 >= today.getMonth())
+            ) {
+              newMonthDetails.push(monthDetails[i]);
+            }
+          }
+        }
+
+        res.status(200).json({
+          monthDetails: newMonthDetails,
+          newCategories: categoryDetails,
+        });
+      });
     })
     .catch((err) => {
       console.log(err);

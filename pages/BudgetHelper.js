@@ -5,6 +5,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 
 function BudgetHelper({
   categories,
+  sixMonthDetails,
   setUserCategories,
   userCategoryList,
   setUserCategoryList,
@@ -31,6 +32,7 @@ function BudgetHelper({
         name={widget}
         changeWidget={changeWidget}
         categories={categories}
+        sixMonthDetails={sixMonthDetails}
         setUserCategories={setUserCategories}
         userCategoryList={userCategoryList}
         setUserCategoryList={setUserCategoryList}
