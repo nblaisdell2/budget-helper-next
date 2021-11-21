@@ -20,7 +20,7 @@ function SixMonthChart({ sixMonthDetails }) {
   };
 
   const chartData = () => {
-    let data = [["BillName", "Months Ahead", "Target"]];
+    let data = [["BillName", "Months Ahead", { role: "style" }, "Target"]];
     for (let i = 0; i < sixMonthDetails.categories.length; i++) {
       let currCat = sixMonthDetails.categories[i];
       console.log("adding to chart");
@@ -30,9 +30,17 @@ function SixMonthChart({ sixMonthDetails }) {
         sixMonthDetails.monthsAheadTarget,
       ]);
 
+      let barColor = "red";
+      if (currCat.monthsAhead >= 3 && currCat.monthsAhead <= 5) {
+        barColor = "gold";
+      } else if (currCat.monthsAhead >= 6) {
+        barColor = "green";
+      }
+
       data.push([
         currCat.name,
         currCat.monthsAhead,
+        barColor,
         sixMonthDetails.monthsAheadTarget,
       ]);
     }
