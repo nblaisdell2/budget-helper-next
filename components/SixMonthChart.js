@@ -37,13 +37,9 @@ function SixMonthChart({ sixMonthDetails }) {
         barColor = "green";
       }
 
-      if (currCat.monthsAhead < 0) {
-        currCat.monthsAhead = 0;
-      }
-
       data.push([
         currCat.name,
-        currCat.monthsAhead,
+        currCat.monthsAhead < 0 ? 0 : currCat.monthsAhead,
         barColor,
         sixMonthDetails.monthsAheadTarget,
       ]);

@@ -104,6 +104,7 @@ function BudgetChartInfo({
               repeatFreqNum: existingCat.repeatFreqNum,
               repeatFreqType: existingCat.repeatFreqType,
               useCurrentMonth: existingCat.useCurrentMonth,
+              numYearsPassed: existingCat.numYearsPassed,
             });
           } else {
             console.log("new one here");
@@ -139,6 +140,7 @@ function BudgetChartInfo({
                 repeatFreqNum: rem.repeatFreqNum,
                 repeatFreqType: rem.repeatFreqType,
                 useCurrentMonth: rem.useCurrentMonth,
+                numYearsPassed: rem.numYearsPassed,
               });
             } else {
               currItemList.push({
@@ -152,6 +154,7 @@ function BudgetChartInfo({
                 repeatFreqNum: null,
                 repeatFreqType: null,
                 useCurrentMonth: 0,
+                numYearsPassed: 0,
               });
             }
           }

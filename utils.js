@@ -22,6 +22,10 @@ export default function getCategoryAmountModified(cat) {
       (parseInt(dtExpDate.getMonth()) + 1) -
       (parseInt(dtExpUpTm.getMonth()) + 1);
 
+    if (cat.numYearsPassed > 0 && monthsDifference !== 1) {
+      monthsDifference -= 1;
+    }
+
     newAmt /= monthsDifference;
   }
 

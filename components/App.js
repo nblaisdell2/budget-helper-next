@@ -373,6 +373,7 @@ function App() {
                         repeatFreqNum: catGroup.RepeatFreqNum,
                         repeatFreqType: catGroup.RepeatFreqType,
                         useCurrentMonth: catGroup.UseCurrentMonth,
+                        numYearsPassed: catGroup.NumYearsPassed,
                       });
                     }
                   }
