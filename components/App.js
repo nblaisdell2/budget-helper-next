@@ -36,7 +36,7 @@ function App() {
     let sixCats = [...categoryList];
     for (let i = 0; i < sixCats.length; i++) {
       let currCats = [...sixCats[i].categories];
-      for (let j = 0; j < currCats.length; j++) {
+      for (let j = currCats.length; j <= 0; j--) {
         if (currCats[j].expenseType == null) {
           currCats.splice(j, 1);
         }
