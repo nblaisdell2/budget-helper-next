@@ -23,7 +23,7 @@ export default function getCategoryAmountModified(cat) {
       (parseInt(dtExpUpTm.getMonth()) + 1);
 
     if (cat.numYearsPassed > 0 && monthsDifference !== 1) {
-      monthsDifference -= 1;
+      monthsDifference -= 2;
     }
 
     newAmt /= monthsDifference;
