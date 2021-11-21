@@ -35,12 +35,6 @@ function App() {
     let newCats = [];
     let sixCats = [...categoryList];
     for (let i = 0; i < sixCats.length; i++) {
-      // let currCats = [...sixCats[i].categories];
-      // for (let j = currCats.length; j <= 0; j--) {
-      //   if (currCats[j].expenseType == null) {
-      //     currCats.splice(j, 1);
-      //   }
-      // }
       let currCats = sixCats[i].categories.filter(
         (x) => x.expenseType !== null
       );
