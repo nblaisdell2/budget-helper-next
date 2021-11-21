@@ -151,7 +151,7 @@ function BudgetChartInfo({
                 expenseUpdateTime: null,
                 repeatFreqNum: null,
                 repeatFreqType: null,
-                useCurrentMonth: 0,
+                useCurrentMonth: 1,
               });
             }
           }
