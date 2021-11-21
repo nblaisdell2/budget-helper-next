@@ -65,6 +65,10 @@ export default function handler(req, res) {
     .then(() => {
       ynab.get_budget_months(req.query.access_token).then((response) => {
         monthDetails = response.data.budget.months;
+        console.log("month details from YNAB!");
+        console.log(monthDetails.length);
+        console.log(monthDetails);
+
         let newMonthDetails = [];
 
         let today = new Date();
@@ -77,6 +81,11 @@ export default function handler(req, res) {
         for (let i = 0; i < monthDetails.length; i++) {
           if (monthDetails[i].budgeted > 0) {
             let ynMonth = new Date(monthDetails[i].month);
+            console.log("YNAB Month");
+            console.log(ynMonth);
+            console.log("Today");
+            console.log(today);
+
             if (
               ynMonth.getFullYear() > today.getFullYear() ||
               (ynMonth.getFullYear() == today.getFullYear() &&
@@ -86,6 +95,8 @@ export default function handler(req, res) {
             }
           }
         }
+        console.log("NEWWWW details from YNAB!");
+        console.log(newMonthDetails);
 
         res.status(200).json({
           monthDetails: newMonthDetails,

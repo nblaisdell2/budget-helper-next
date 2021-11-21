@@ -49,46 +49,49 @@ function App() {
       let currCat = newCats[i];
       currCat.monthsAhead = 0;
 
-      console.log("Getting months ahead for " + currCat.name);
-      console.log(ynabMonthDetails);
+      if (ynabMonthDetails.length > 0) {
+        console.log("Getting months ahead for " + currCat.name);
+        console.log(ynabMonthDetails);
 
-      let monthCat = null;
-      if (currCat.expenseType == "Monthly") {
-        monthCat = ynabMonthDetails[0].categories.find(
-          (x) =>
-            x.category_group_id == currCat.categoryGroupID && x.id == currCat.id
-        );
-        currCat.monthsAhead =
-          Math.floor(monthCat.balance / 1000 / currCat.categoryAmount) - 1;
-      } else {
-        for (let j = ynabMonthDetails.length - 2; j >= 0; j--) {
-          console.log("month");
-          console.log(ynabMonthDetails[j].month);
-
-          monthCat = ynabMonthDetails[j].categories.find(
+        let monthCat = null;
+        if (currCat.expenseType == "Monthly") {
+          monthCat = ynabMonthDetails[0].categories.find(
             (x) =>
               x.category_group_id == currCat.categoryGroupID &&
               x.id == currCat.id
           );
+          currCat.monthsAhead =
+            Math.floor(monthCat.balance / 1000 / currCat.categoryAmount) - 1;
+        } else {
+          for (let j = ynabMonthDetails.length - 2; j >= 0; j--) {
+            console.log("month");
+            console.log(ynabMonthDetails[j].month);
 
-          let catAmt = currCat.categoryAmount;
-          if (currCat.repeatFreqType == "Years") {
-            catAmt /= currCat.repeatFreqNum * 12;
-          } else {
-            catAmt /= currCat.repeatFreqNum;
-          }
+            monthCat = ynabMonthDetails[j].categories.find(
+              (x) =>
+                x.category_group_id == currCat.categoryGroupID &&
+                x.id == currCat.id
+            );
 
-          console.log(catAmt);
-          console.log(monthCat.budgeted / 1000);
+            let catAmt = currCat.categoryAmount;
+            if (currCat.repeatFreqType == "Years") {
+              catAmt /= currCat.repeatFreqNum * 12;
+            } else {
+              catAmt /= currCat.repeatFreqNum;
+            }
 
-          if (monthCat.budgeted / 1000 >= catAmt) {
-            currCat.monthsAhead += 1;
+            console.log(catAmt);
+            console.log(monthCat.budgeted / 1000);
+
+            if (monthCat.budgeted / 1000 >= catAmt) {
+              currCat.monthsAhead += 1;
+            }
           }
         }
-      }
 
-      if (currCat.monthsAhead >= monthsAheadTarget) {
-        targetMetCount += 1;
+        if (currCat.monthsAhead >= monthsAheadTarget) {
+          targetMetCount += 1;
+        }
       }
     }
 
