@@ -616,6 +616,9 @@ function App() {
 
   return (
     <div>
+      <div className="mb-5">
+        <p>{new Date().toLocaleString()}</p>
+      </div>
       <Header accessToken={ynabTokens.accessToken} />
       <BudgetHelper
         categories={userCategories}

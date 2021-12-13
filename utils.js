@@ -14,8 +14,6 @@ export default function getCategoryAmountModified(cat) {
     let dtExpDate = new Date(cat.expenseDate);
     let dtExpUpTm = new Date(cat.expenseUpdateTime);
 
-    
-
     let yearsAhead =
       parseInt(dtExpDate.getFullYear()) - parseInt(dtExpUpTm.getFullYear());
 

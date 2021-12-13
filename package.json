@@ -17,6 +17,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.23.0",
+    "msnodesqlv8": "^2.4.4",
     "mssql": "^7.2.1",
     "next": "11.1.2",
     "react": "17.0.2",
