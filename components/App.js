@@ -618,6 +618,8 @@ function App() {
     <div>
       <div className="mb-5">
         <p>{new Date().toLocaleString()}</p>
+        <p>{ynabTokens.expirationDate?.toLocaleString()}</p>
+        <p>{new Date(ynabTokens.expirationDate).toLocaleString()}</p>
       </div>
       <Header accessToken={ynabTokens.accessToken} />
       <BudgetHelper
