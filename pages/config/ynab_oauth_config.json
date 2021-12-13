@@ -1,5 +1,5 @@
 {
   "CLIENT_ID": "4823916bcd511b01259c6ef3357e3d62f823ea9e892b00ad9277b884252d22da",
   "CLIENT_SECRET": "695972d624470d8b8a60e1181508efd244667ea50301b9da457582dc75da8557",
-  "REDIRECT_URI": "http://localhost:3000/"
+  "REDIRECT_URI": "https://budget-helper-next.vercel.app/"
 }

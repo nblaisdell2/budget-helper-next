@@ -1,5 +1,5 @@
 {
   "domain": "dev-esf-zpup.us.auth0.com",
   "clientId": "xFoznGZ1oPwMlFDhvklBoVrNiBwMPigY",
-  "redirectUri": "http://localhost:3000/"
+  "redirectUri": "https://budget-helper-next.vercel.app/"
 }
