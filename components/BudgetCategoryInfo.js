@@ -29,11 +29,17 @@ function BudgetCategoryInfo({
     return newCategory;
   };
 
+  const monthDiff = (dateFrom, dateTo) => {
+    return dateTo.getMonth() - dateFrom.getMonth() + 
+      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+   }
+
   useEffect(() => {
     if (!dateChanged) {
       setDateChanged(true);
     } else {
       let newCat = getNewCategory("expenseDate", autoDate.toISOString());
+      newCat.expenseMonthsDivisor = monthDiff(new Date(), autoDate) + 1;
       setCategory(newCat);
     }
   }, [autoDate]);
@@ -131,17 +137,12 @@ function BudgetCategoryInfo({
               onClick={() => {
                 let newCat = { ...category };
                 let updateTime = new Date();
-                console.log("update time!");
-                console.log(updateTime);
                 updateTime.setMonth(updateTime.getMonth() - 1);
-
-                console.log("update time?");
-                console.log(updateTime);
 
                 newCat.expenseType = showRegular ? null : "Monthly";
                 newCat.includeOnChart = 1;
                 newCat.expenseDate = showRegular ? null : new Date();
-                newCat.expenseUpdateTime = showRegular ? null : updateTime;
+                // newCat.expenseUpdateTime = showRegular ? null : updateTime;
                 newCat.repeatFreqNum = showRegular ? null : 1;
                 newCat.repeatFreqType = showRegular ? null : "Months";
                 setCategory(newCat);
@@ -169,14 +170,11 @@ function BudgetCategoryInfo({
                 type="numeric"
                 value={category.upcomingExpense?.toString()}
                 onChange={(e) => {
-                  console.log(e);
-                  // if (tryParseInt(e.target.value)) {
                   let newCat = getNewCategory(
                     "upcomingExpense",
                     e.target.value == "" ? null : parseInt(e.target.value)
                   );
                   setCategory(newCat);
-                  // }
                 }}
                 onClick={(e) => e.target.select()}
               />
@@ -200,10 +198,12 @@ function BudgetCategoryInfo({
                       newCat.expenseDate = new Date();
                       let updateTime = new Date();
                       updateTime.setMonth(updateTime.getMonth() - 1);
-                      newCat.expenseUpdateTime = updateTime;
+                      // newCat.expenseUpdateTime = updateTime;
+                      newCat.expenseMonthsDivisor = 1;
                     } else {
                       newCat.expenseDate = null;
-                      newCat.expenseUpdateTime = null;
+                      newCat.expenseMonthsDivisor = null;
+                      // newCat.expenseUpdateTime = null;
                     }
 
                     setCategory(newCat);

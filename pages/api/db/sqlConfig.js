@@ -54,18 +54,6 @@ function query(res, spName, params) {
       console.log(err);
       res.send("Error");
     });
-
-  // sql.open(sqlConnString, function (err, conn) {
-  //   if (err) console.log(err);
-
-  //   var pm = conn.procedureMgr();
-  //   pm.callproc(spName, params, function (err, results, output) {
-  //     if (err) console.log(err);
-  //     console.log("query results");
-  //     console.log(results);
-  //     res.status(200).json(results);
-  //   });
-  // });
 }
 
 // This function will run a stored procedure, and get no results
@@ -91,18 +79,6 @@ function execute(res, spName, params) {
       console.log(err);
       res.send("Error");
     });
-
-  // sql.open(sqlConnString, function (err, conn) {
-  //   if (err) console.log(err);
-
-  //   var pm = conn.procedureMgr();
-  //   pm.callproc(spName, params, function (err, results, output) {
-  //     if (err) console.log(err);
-  //     console.log("execute results");
-  //     console.log(results);
-  //     res.status(200).json({ status: "OK" });
-  //   });
-  // });
 }
 
 exports.query = query;

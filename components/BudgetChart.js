@@ -15,21 +15,12 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
 
   useEffect(() => {
     if (!isLoading && Object.keys(userDetails).length > 0) {
-      console.log("monthly amount?");
-      console.log(monthlyAmount);
-
-      console.log("what are my user details, in here tho?");
-      console.log(userDetails);
-
       setMonthlyAmount(userDetails.MonthlyAmount);
     }
   }, [userDetails]);
 
   useEffect(() => {
     if (userCategoryList.length > 0) {
-      console.log("What's the category list?");
-      console.log(userCategoryList);
-
       let newGrandTotal = 0;
       for (let i = 0; i < userCategoryList.length; i++) {
         for (let j = 0; j < userCategoryList[i].categories.length; j++) {
@@ -40,9 +31,6 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
           newGrandTotal += catAmt;
         }
       }
-
-      console.log("grand total");
-      console.log(newGrandTotal);
 
       setGrandTotal(newGrandTotal);
     }
@@ -112,27 +100,21 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
 
   const updateMontlyIncome = () => {
     let newUserDetails = { ...userDetails };
-    console.log("about to set monthly to: " + monthlyAmount);
     newUserDetails.MonthlyAmount = monthlyAmount;
     setUserDetails(newUserDetails);
 
     if (user) {
       // TODO: Update the database here, and only update the monthly amount
       //       for the current user
-      console.log("Updating Monthly Amount in Database");
       Axios.post("/api/db/update_monthly_amount", {
         UserID: userDetails.UserID,
         MonthlyAmount: monthlyAmount,
       })
         .then((repsonse) => {
-          console.log("Updated Monthly amount in DB successfully!");
         })
         .catch((err) => {
-          console.log(err);
         });
     } else {
-      console.log("setting monthly amount in session storage");
-      console.log(monthlyAmount);
       sessionStorage.setItem("monthlyAmount", monthlyAmount);
     }
 
@@ -159,11 +141,6 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
                       type="numeric"
                       value={monthlyAmount}
                       onChange={(e) => {
-                        console.log(
-                          "it changed to this! " + e.target.value == ""
-                            ? 0
-                            : parseInt(e.target.value)
-                        );
                         setMonthlyAmount(
                           e.target.value == "" ? 0 : parseInt(e.target.value)
                         );

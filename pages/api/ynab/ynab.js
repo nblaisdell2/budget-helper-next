@@ -13,7 +13,6 @@ module.exports.get_budget_categories = function (
   accToken,
   budgetID = "default"
 ) {
-  console.log("Access Token in YNAB code: " + accToken);
 
   return Axios.get(baseURL + "/budgets/" + budgetID + "/categories", {
     headers: {
@@ -22,14 +21,10 @@ module.exports.get_budget_categories = function (
   })
     .then((response) => response.data)
     .catch((err) => {
-      console.log("YNAB API Error");
-      console.log(err);
     });
 };
 
 module.exports.get_budget_months = function (accToken, budgetID = "default") {
-  console.log("Getting Budget Months from YNAB!");
-
   return Axios.get(baseURL + "/budgets/" + budgetID, {
     headers: {
       Authorization: "Bearer " + accToken,
@@ -37,8 +32,6 @@ module.exports.get_budget_months = function (accToken, budgetID = "default") {
   })
     .then((response) => response.data)
     .catch((err) => {
-      console.log("YNAB API Error");
-      console.log(err);
     });
 };
 
@@ -84,10 +77,6 @@ module.exports.get_ynab_oauth_token = function (params) {
   return Axios.post("https://app.youneedabudget.com/oauth/token", params)
     .then((response) => response.data)
     .catch((e) => {
-      // console.log(e);
-      console.log("[YNAB ERROR]");
-      console.log(e.response.data.error);
-      console.log(e.response.data.error_description);
     });
 };
 

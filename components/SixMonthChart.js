@@ -23,12 +23,6 @@ function SixMonthChart({ sixMonthDetails }) {
     let data = [["BillName", "Months Ahead", { role: "style" }, "Target"]];
     for (let i = 0; i < sixMonthDetails.categories.length; i++) {
       let currCat = sixMonthDetails.categories[i];
-      console.log("adding to chart");
-      console.log([
-        currCat.name,
-        currCat.monthsAhead,
-        sixMonthDetails.monthsAheadTarget,
-      ]);
 
       let barColor = "red";
       if (currCat.monthsAhead >= 3 && currCat.monthsAhead <= 5) {

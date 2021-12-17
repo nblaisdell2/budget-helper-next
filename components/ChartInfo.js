@@ -26,7 +26,7 @@ function ChartInfo({
           />
         );
       case "Six Month Details":
-        return <SixMonthInfo sixMonthDetails={sixMonthDetails} />;
+        return <SixMonthInfo userDetails={userDetails} setUserDetails={setUserDetails} sixMonthDetails={sixMonthDetails} />;
       case "Upcoming Expenses":
         return <UpcomingExpensesInfo />;
       default:

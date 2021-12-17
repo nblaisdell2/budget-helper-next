@@ -10,14 +10,10 @@ function OAuth(props) {
   const router = useRouter();
   const authCode = router.query.code;
 
-  console.log(router.query);
-
   let accessToken;
 
   useEffect(() => {
     if (!isLoading) {
-      console.log("Finished loading");
-
       Axios.post("/api/ynab/get_access_token", {
         params: {
           client_id: ynab_config.CLIENT_ID,

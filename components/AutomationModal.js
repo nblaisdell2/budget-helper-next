@@ -34,11 +34,8 @@ function AutomationModal({
       AMPM: amPM,
     })
       .then((response) => {
-        console.log("Saved Automation Results to DB successfully!");
-        console.log(response);
       })
       .catch((err) => {
-        console.log(err);
       });
 
     closeModal();

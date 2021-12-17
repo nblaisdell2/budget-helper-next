@@ -17,7 +17,6 @@ function BudgetHelper({
   const { user, isLoading } = useUser();
 
   const changeWidget = (newWidget) => {
-    console.log(newWidget);
     setWidget(newWidget);
   };
 

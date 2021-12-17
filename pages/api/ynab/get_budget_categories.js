@@ -7,16 +7,12 @@ const unwantedCategories = [
 ];
 
 export default function handler(req, res) {
-  console.log("Getting YNAB Categories");
   let categoryDetails = null;
   let monthDetails = null;
 
   ynab
     .get_budget_categories(req.query.access_token)
     .then((response) => {
-      console.log("Got Budget Categories from YNAB!");
-      console.log(response);
-
       let newCategories = {
         serverKnowledge: response.data.server_knowledge,
         category_groups: [],
@@ -65,10 +61,6 @@ export default function handler(req, res) {
     .then(() => {
       ynab.get_budget_months(req.query.access_token).then((response) => {
         monthDetails = response.data.budget.months;
-        console.log("month details from YNAB!");
-        console.log(monthDetails.length);
-        console.log(monthDetails);
-
         let newMonthDetails = [];
 
         let today = new Date();
@@ -81,10 +73,6 @@ export default function handler(req, res) {
         for (let i = 0; i < monthDetails.length; i++) {
           if (monthDetails[i].budgeted > 0) {
             let ynMonth = new Date(monthDetails[i].month);
-            console.log("YNAB Month");
-            console.log(ynMonth);
-            console.log("Today");
-            console.log(today);
 
             if (
               ynMonth.getFullYear() > today.getFullYear() ||
@@ -95,8 +83,6 @@ export default function handler(req, res) {
             }
           }
         }
-        console.log("NEWWWW details from YNAB!");
-        console.log(newMonthDetails);
 
         res.status(200).json({
           monthDetails: newMonthDetails,
@@ -105,7 +91,6 @@ export default function handler(req, res) {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ error: err });
     });
 }

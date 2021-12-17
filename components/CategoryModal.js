@@ -1,7 +1,4 @@
 function CategoryModal({ categories, addToList, closeModal }) {
-  console.log("categories in modal");
-  console.log(categories);
-
   let isToggling = false;
 
   return (

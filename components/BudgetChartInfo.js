@@ -30,7 +30,6 @@ function BudgetChartInfo({
     let newCategories = { ...categories };
 
     if (level == "group") {
-      console.log("Adding items to userList - GROUP");
       let currGroup = newCategories.category_groups.find((x) => x.id == id);
       for (let i = 0; i < currGroup.categories.length; i++) {
         currGroup.categories[i].inUserList = isChecked;
@@ -41,12 +40,9 @@ function BudgetChartInfo({
           let newRemCats = [...removedCategories];
           newRemCats.push({ ...existCat });
           setRemovedCategories(newRemCats);
-          console.log("removed category and added to list");
-          console.log(newRemCats);
         }
       }
     } else if (level == "category") {
-      console.log("Adding items to userList - CATEGORY");
       for (let i = 0; i < newCategories.category_groups.length; i++) {
         let foundCat = newCategories.category_groups[i].categories.find(
           (x) => x.id == id
@@ -61,8 +57,6 @@ function BudgetChartInfo({
             let newRemCats = [...removedCategories];
             newRemCats.push({ ...existCat });
             setRemovedCategories(newRemCats);
-            console.log("removed category and added to list");
-            console.log(newRemCats);
           }
         }
       }
@@ -86,13 +80,6 @@ function BudgetChartInfo({
               (x) => x.id == newCategories.category_groups[i].categories[j].id
             );
           if (existingCat) {
-            // console.log("FOUND EXISTING!");
-            // console.log("  GroupID: " + newCategories.category_groups[i].id);
-            // console.log(
-            //   "  CatID  : " + newCategories.category_groups[i].categories[j].id
-            // );
-            // console.log(existingCat);
-
             currItemList.push({
               ...newCategories.category_groups[i].categories[j],
               categoryAmount: existingCat.categoryAmount,
@@ -100,17 +87,14 @@ function BudgetChartInfo({
               includeOnChart: existingCat.includeOnChart,
               upcomingExpense: existingCat.upcomingExpense,
               expenseDate: existingCat.expenseDate,
-              expenseUpdateTime: existingCat.expenseUpdateTime,
+              expenseMonthsDivisor: existingCat.expenseMonthsDivisor,
+              // expenseUpdateTime: existingCat.expenseUpdateTime,
               repeatFreqNum: existingCat.repeatFreqNum,
               repeatFreqType: existingCat.repeatFreqType,
               useCurrentMonth: existingCat.useCurrentMonth,
-              numYearsPassed: existingCat.numYearsPassed,
+              // numYearsPassed: existingCat.numYearsPassed,
             });
           } else {
-            console.log("new one here");
-            console.log("removed categories");
-            console.log(removedCategories);
-
             let newRemCats = [...removedCategories];
             let idx = newRemCats.indexOf(
               newRemCats.find(
@@ -120,15 +104,10 @@ function BudgetChartInfo({
             let rem = { ...newRemCats[idx] };
 
             if (Object.keys(rem).length > 0) {
-              console.log("what is rem?");
-              console.log(rem);
-              console.log("we have a removed one here!");
               if (idx > -1) {
                 newRemCats.splice(idx, 1);
               }
               setRemovedCategories(newRemCats);
-              console.log("new removed list");
-              console.log(newRemCats);
               currItemList.push({
                 ...newCategories.category_groups[i].categories[j],
                 categoryAmount: rem.categoryAmount,
@@ -136,11 +115,12 @@ function BudgetChartInfo({
                 includeOnChart: rem.includeOnChart,
                 upcomingExpense: rem.upcomingExpense,
                 expenseDate: rem.expenseDate,
-                expenseUpdateTime: rem.expenseUpdateTime,
+                expenseMonthsDivisor: rem.expenseMonthsDivisor,
+                // expenseUpdateTime: rem.expenseUpdateTime,
                 repeatFreqNum: rem.repeatFreqNum,
                 repeatFreqType: rem.repeatFreqType,
                 useCurrentMonth: rem.useCurrentMonth,
-                numYearsPassed: rem.numYearsPassed,
+                // numYearsPassed: rem.numYearsPassed,
               });
             } else {
               currItemList.push({
@@ -150,11 +130,12 @@ function BudgetChartInfo({
                 includeOnChart: null,
                 upcomingExpense: null,
                 expenseDate: null,
-                expenseUpdateTime: null,
+                expenseMonthsDivisor: null,
+                // expenseUpdateTime: null,
                 repeatFreqNum: null,
                 repeatFreqType: null,
                 useCurrentMonth: 0,
-                numYearsPassed: 0,
+                // numYearsPassed: 0,
               });
             }
           }
@@ -174,9 +155,6 @@ function BudgetChartInfo({
         });
       }
     }
-
-    console.log("new user list");
-    console.log(userList);
 
     setUserCategories(newCategories);
     setUserCategoryList(userList);
@@ -200,17 +178,8 @@ function BudgetChartInfo({
   }
 
   const getNextAutoRunString = (nextRun) => {
-    console.log("what is the next run?");
-    console.log(nextRun);
-
     let strNextRun = "";
     let dtNextRun = new Date(nextRun);
-
-    console.log("dtNextRun");
-    console.log(dtNextRun);
-    console.log(dtNextRun.getDate());
-    console.log(new Date());
-    console.log(new Date().getDate());
 
     strNextRun = dtNextRun
       .toLocaleString()
@@ -231,26 +200,15 @@ function BudgetChartInfo({
   useEffect(() => {
     if (!isLoading) {
       if (selectedCategory !== null) {
-        console.log("updating selected category");
-        console.log(selectedCategory);
         let newList = [...userCategoryList];
         let newCat = newList
           .find((x) => x.id == selectedCategory.categoryGroupID)
           ?.categories.find((x) => x.id == selectedCategory.id);
-        // console.log("newCat");
-        // console.log(newCat);
         let catKeys = Object.keys(selectedCategory);
         for (let i = 0; i < catKeys.length; i++) {
           newCat[catKeys[i]] = selectedCategory[catKeys[i]];
         }
-        // newCat.categoryAmount = selectedCategory.categoryAmount;
-        // newCat.expenseType = selectedCategory.expenseType;
-        // newCat.includeOnChart = selectedCategory.includeOnChart;
-        // newCat.upcomingExpense = selectedCategory.upcomingExpense;
 
-        // console.log("newCat - after");
-        // console.log(newCat);
-        // newCat = { ...selectedCategory };
         setUserCategoryList(newList);
 
         delete selectedCategory.saveChanges;
@@ -282,17 +240,8 @@ function BudgetChartInfo({
     );
   }
 
-  // console.log("YNAB Categories");
-  // console.log(categories);
-
   console.log("User-List Categories");
   console.log(userCategoryList);
-
-  console.log("Monthly Income");
-  console.log(userDetails.MonthlyAmount);
-
-  console.log("Curr Modal set");
-  console.log(ModalItem);
 
   return (
     <div>
@@ -303,29 +252,16 @@ function BudgetChartInfo({
           <div
             className="flex hover:underline"
             onClick={() => {
-              // let newCat = getNewCategory("saveChanges", true);
-              console.log("about to save userList!");
-              console.log(userCategoryList);
-
-              console.log(
-                "what are the user details when saving my categories?"
-              );
-              console.log(userDetails);
-
               Axios.post("/api/db/save_category_results", {
                 UserID: userDetails.UserID,
                 BudgetID: userDetails.DefaultBudgetID,
                 CategoryDetails: JSON.stringify(userCategoryList),
               })
                 .then((response) => {
-                  console.log("Category Details save to database!");
-                  console.log(response);
                 })
                 .catch((err) => {
-                  console.log(err);
                 });
               setChangesMade(false);
-              // setCategory(newCat);
             }}
           >
             {user && (
