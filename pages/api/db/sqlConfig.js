@@ -1,15 +1,15 @@
 var sql = null;
 var sqlConfig = {};
 
-// DEV / LOCALHOST - SQL Server Connection
-// DONT FORGET TO REINSTALL: npm install msnodesqlv8
-sql = require("mssql/msnodesqlv8");
-sqlConfig = {
-  driver: "msnodesqlv8",
-  parseJSON: true,
-  connectionString:
-    "Driver={SQL Server Native Client 11.0};Server=DESKTOP-T76C4AL\\DESKTOPHOME;Database=BudgetHelper;Integrated Security=True;Trusted_Connection=yes;",
-};
+// // DEV / LOCALHOST - SQL Server Connection
+// // DONT FORGET TO REINSTALL: npm install msnodesqlv8
+// sql = require("mssql/msnodesqlv8");
+// sqlConfig = {
+//   driver: "msnodesqlv8",
+//   parseJSON: true,
+//   connectionString:
+//     "Driver={SQL Server Native Client 11.0};Server=DESKTOP-T76C4AL\\DESKTOPHOME;Database=BudgetHelper;Integrated Security=True;Trusted_Connection=yes;",
+// };
 
 // PRODUCTION / AWS - SQL Server Connection
 // DONT FORGET TO UNINSTALL: npm uninstall msnodesqlv8
