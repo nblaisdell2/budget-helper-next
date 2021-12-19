@@ -7,9 +7,8 @@ import MyModal from "./MyModal";
 
 import getCategoryAmountModified from "../utils";
 
-import ChevronDownIcon from "@heroicons/react/outline/ChevronDownIcon";
-import ChevronRightIcon from "@heroicons/react/outline/ChevronRightIcon";
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
+import BudgetCategoryInfoListItem from "./BudgetCategoryInfoListItem";
 
 function BudgetChartInfo({
   categories,
@@ -197,6 +196,60 @@ function BudgetChartInfo({
     return strNextRun;
   };
 
+  const getCategoryListItems = () => {
+    let listItems = [];
+    for (let i = 0; i < userCategoryList.length; i++) {
+      let currItem = userCategoryList[i];
+      let groupTotalModified = currItem.categories.reduce((a, b) => {
+        return a + getCategoryAmountModified(b);
+      }, 0);
+
+      listItems.push({
+        key: currItem.id,
+        id: currItem.id,
+        category: currItem.name,
+        amount: "$" + groupTotalModified.toFixed(0),
+        percentIncome:
+          (userDetails.MonthlyAmount == 0
+            ? 0
+            : Math.round(
+                (groupTotalModified / userDetails.MonthlyAmount) * 100
+              )) + "%",
+        isParent: true,
+        isExpanded: currItem.isExpanded,
+        fullCategory: null,
+      });
+
+      for (let j = 0; j < currItem.categories.length; j++) {
+        let currCat = currItem.categories[j];
+        let catAmtMod = getCategoryAmountModified(currCat);
+        let showOther = currCat.categoryAmount !== catAmtMod;
+
+        listItems.push({
+          key: currCat.id,
+          id: currCat.id,
+          category: currCat.name,
+          amount: showOther
+            ? "$" +
+              catAmtMod.toFixed(2) +
+              " / ($" +
+              currCat.categoryAmount +
+              ")"
+            : "$" + catAmtMod.toFixed(2),
+          percentIncome:
+            (userDetails.MonthlyAmount == 0
+              ? 0
+              : (catAmtMod / userDetails.MonthlyAmount) * 100
+            ).toFixed(2) + "%",
+          isParent: false,
+          isExpanded: currItem.isExpanded,
+          fullCategory: currCat,
+        });
+      }
+    }
+    return listItems;
+  };
+
   useEffect(() => {
     if (!isLoading) {
       if (selectedCategory !== null) {
@@ -243,6 +296,8 @@ function BudgetChartInfo({
   console.log("User-List Categories");
   console.log(userCategoryList);
 
+  let listItems = getCategoryListItems();
+
   return (
     <div>
       <div className="flex justify-between">
@@ -257,10 +312,8 @@ function BudgetChartInfo({
                 BudgetID: userDetails.DefaultBudgetID,
                 CategoryDetails: JSON.stringify(userCategoryList),
               })
-                .then((response) => {
-                })
-                .catch((err) => {
-                });
+                .then((response) => {})
+                .catch((err) => {});
               setChangesMade(false);
             }}
           >
@@ -277,112 +330,36 @@ function BudgetChartInfo({
       <div className="flex flex-col my-2 h-[500px] overflow-y-auto">
         <table className="relative table-auto">
           <thead>
-            <th className="sticky top-0 bg-white p-2"></th>
-            <th className="text-left sticky top-0 bg-white p-2 text-xl">
-              Category
-            </th>
-            <th className="text-right sticky top-0 bg-white p-2 text-xl">
-              Amount
-            </th>
-            <th className="text-center sticky top-0 bg-white p-2 text-xl">
-              % of Income
-            </th>
+            <tr>
+              <th className="sticky top-0 bg-white p-2"></th>
+              <th className="text-left sticky top-0 bg-white p-2 text-xl">
+                Category
+              </th>
+              <th className="text-right sticky top-0 bg-white p-2 text-xl">
+                Amount
+              </th>
+              <th className="text-center sticky top-0 bg-white p-2 text-xl">
+                % of Income
+              </th>
+            </tr>
           </thead>
 
           <tbody>
-            {userCategoryList.map((item, i) => {
-              let groupTotal = item.categories.reduce((a, b) => {
-                return a + b.categoryAmount;
-              }, 0);
-              let groupTotalModified = item.categories.reduce((a, b) => {
-                return a + getCategoryAmountModified(b);
-              }, 0);
-
+            {listItems.map((item, i) => {
               return (
-                <>
-                  <tr
-                    key={item.id}
-                    className="cursor-pointer hover:bg-gray-200"
-                    onClick={() => {
-                      let newList = [...userCategoryList];
-
-                      let expandGroup = newList.find((x) => x.id == item.id);
-                      expandGroup.isExpanded = !item.isExpanded;
-                      setUserCategoryList(newList);
-                    }}
-                  >
-                    <td>
-                      {item.isExpanded ? (
-                        <ChevronDownIcon className="h-6 inline" />
-                      ) : (
-                        <ChevronRightIcon className="h-6 inline" />
-                      )}
-                    </td>
-                    <td>
-                      <span className="cursor-pointer font-bold">
-                        {item.name}
-                      </span>
-                    </td>
-                    <td className="text-right font-bold">
-                      <span className="mr-1">
-                        {"$" + groupTotalModified.toFixed(0)}
-                      </span>
-                    </td>
-                    <td className="text-right font-bold">
-                      <span className="mr-10">
-                        {(userDetails.MonthlyAmount == 0
-                          ? 0
-                          : Math.round(
-                              (groupTotalModified / userDetails.MonthlyAmount) *
-                                100
-                            )) + "%"}
-                      </span>
-                    </td>
-                  </tr>
-
-                  <>
-                    {item.isExpanded &&
-                      item.categories.map((itemc, ci) => {
-                        let catAmtMod = getCategoryAmountModified(itemc);
-                        let showOther = itemc.categoryAmount !== catAmtMod;
-
-                        return (
-                          <tr
-                            key={itemc.id}
-                            className="cursor-pointer hover:bg-gray-300"
-                            onClick={() => setSelectedCategory(itemc)}
-                          >
-                            <td></td>
-                            <td>
-                              <span className="ml-4 cursor-pointer">
-                                {itemc.name}
-                              </span>
-                            </td>
-                            <td className="text-right">
-                              <span className="mr-1">
-                                {showOther
-                                  ? "$" +
-                                    catAmtMod.toFixed(2) +
-                                    " / ($" +
-                                    itemc.categoryAmount +
-                                    ")"
-                                  : "$" + catAmtMod.toFixed(2)}
-                              </span>
-                            </td>
-                            <td className="text-right">
-                              <span className="mr-10">
-                                {(userDetails.MonthlyAmount == 0
-                                  ? 0
-                                  : (catAmtMod / userDetails.MonthlyAmount) *
-                                    100
-                                ).toFixed(2) + "%"}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                  </>
-                </>
+                <BudgetCategoryInfoListItem
+                  key={item.key}
+                  id={item.id}
+                  category={item.category}
+                  amount={item.amount}
+                  percentIncome={item.percentIncome}
+                  isParent={item.isParent}
+                  isExpanded={item.isExpanded}
+                  fullCategory={item.fullCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  userCategoryList={userCategoryList}
+                  setUserCategoryList={setUserCategoryList}
+                />
               );
             })}
           </tbody>
@@ -421,8 +398,6 @@ function BudgetChartInfo({
         addToList={addToList}
         userCategoryList={userCategoryList}
         userDetails={userDetails}
-        // userID={userDetails.UserID}
-        // budgetID={userDetails.DefaultBudgetID}
         setUserDetails={setUserDetails}
       />
     </div>

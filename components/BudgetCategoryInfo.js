@@ -30,9 +30,12 @@ function BudgetCategoryInfo({
   };
 
   const monthDiff = (dateFrom, dateTo) => {
-    return dateTo.getMonth() - dateFrom.getMonth() + 
-      (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
-   }
+    return (
+      dateTo.getMonth() -
+      dateFrom.getMonth() +
+      12 * (dateTo.getFullYear() - dateFrom.getFullYear())
+    );
+  };
 
   useEffect(() => {
     if (!dateChanged) {
@@ -92,7 +95,7 @@ function BudgetCategoryInfo({
 
             <div>
               <input
-                class="rounded-lg overflow-hidden appearance-none bg-gray-400 h-4 w-full"
+                className="rounded-lg overflow-hidden appearance-none bg-gray-400 h-4 w-full"
                 type="range"
                 min="0"
                 max="100"
@@ -127,7 +130,11 @@ function BudgetCategoryInfo({
                 setShowUpcoming(!showUpcoming);
               }}
             >
-              <input type="checkbox" checked={showUpcoming} />
+              <input
+                type="checkbox"
+                checked={showUpcoming}
+                onChange={() => {}}
+              />
               {"  "}
               <span>Upcoming Expense</span>
             </div>
@@ -152,7 +159,11 @@ function BudgetCategoryInfo({
                 setChangesMade(true);
               }}
             >
-              <input type="checkbox" checked={showRegular} />
+              <input
+                type="checkbox"
+                checked={showRegular}
+                onChange={() => {}}
+              />
               {"  "}
               <span>6 Months Expense</span>
             </div>
@@ -227,7 +238,11 @@ function BudgetCategoryInfo({
                   setCategory(newCat);
                 }}
               >
-                <input type="checkbox" checked={category.includeOnChart == 1} />
+                <input
+                  type="checkbox"
+                  checked={category.includeOnChart == 1}
+                  onChange={() => {}}
+                />
                 {"  "}
                 <span>Include on Chart?</span>
               </div>
@@ -247,6 +262,7 @@ function BudgetCategoryInfo({
                 <input
                   type="checkbox"
                   checked={category.useCurrentMonth == 1}
+                  onChange={() => {}}
                 />
                 {"  "}
                 <span>Always Use Current Month?</span>
@@ -276,6 +292,7 @@ function BudgetCategoryInfo({
                     <input
                       type="checkbox"
                       checked={category.repeatFreqNum !== null}
+                      onChange={() => {}}
                     />
                     {"  "}
                     <span>Repeat?</span>

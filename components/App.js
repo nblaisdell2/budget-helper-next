@@ -5,7 +5,6 @@ import Axios from "axios";
 import ynab_config from "../pages/config/ynab_oauth_config.json";
 import { useUser } from "@auth0/nextjs-auth0";
 import Router, { useRouter } from "next/router";
-import getCategoryAmountModified from "../utils";
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
@@ -139,12 +138,10 @@ function App() {
               access_token: data.tokens.accessToken,
               expires_in: data.expireSeconds,
               refresh_token: data.tokens.refreshToken,
-            }).catch((e) => {
-            });
+            }).catch((e) => {});
           }
         })
-        .catch((e) => {
-        });
+        .catch((e) => {});
     }
   };
 
@@ -181,8 +178,7 @@ function App() {
             });
           }
         })
-        .catch((e) => {
-        });
+        .catch((e) => {});
     } else {
       let existingTokens = {
         accessToken: sessionStorage.getItem("accessToken"),
@@ -317,8 +313,7 @@ function App() {
 
           setUserCategories(newCategories);
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
     }
   };
 
@@ -333,10 +328,8 @@ function App() {
           UserID: userDetails.UserID,
           MonthlyAmount: userDetails.MonthlyAmount,
         })
-          .then((repsonse) => {
-          })
-          .catch((err) => {
-          });
+          .then((repsonse) => {})
+          .catch((err) => {});
       }
 
       // Setting YNAB tokens for new user from previous session
@@ -363,8 +356,7 @@ function App() {
               refresh_token: userDetails.RefreshToken,
             });
           })
-          .catch((err) => {
-          });
+          .catch((err) => {});
 
         // Setting YNAB categories for new user from previous session
         let sess_userList = sessionStorage.getItem("userList");
@@ -374,10 +366,8 @@ function App() {
             BudgetID: userDetails.DefaultBudgetID,
             CategoryDetails: sess_userList,
           })
-            .then((response) => {
-            })
-            .catch((err) => {
-            });
+            .then((response) => {})
+            .catch((err) => {});
         }
       }
     }
@@ -385,9 +375,8 @@ function App() {
 
   // On First Load
   useEffect(() => {
-    console.log("First Load?");
     if (!isLoading) {
-      console.log("Loaded!");
+      console.log("First Load");
 
       if (router.asPath && router.asPath.substring(0, 6) == "/?code") {
         Axios.post("/api/ynab/get_access_token", {
@@ -459,10 +448,8 @@ function App() {
               UserID: userDetails.UserID,
               BudgetID: response.data,
             })
-              .then((repsonse) => {
-              })
-              .catch((err) => {
-              });
+              .then((repsonse) => {})
+              .catch((err) => {});
           } else {
             sessionStorage.setItem("defaultBudgetID", response.data);
           }
@@ -478,6 +465,8 @@ function App() {
       sessionStorage.setItem("userList", JSON.stringify(userCategoryList));
     }
   }, [userCategoryList]);
+
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div>
