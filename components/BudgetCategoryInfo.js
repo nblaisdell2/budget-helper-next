@@ -250,6 +250,27 @@ function BudgetCategoryInfo({
                 className="cursor-pointer"
                 onClick={(e) => {
                   let newCat = getNewCategory(
+                    "toggleInclude",
+                    category.toggleInclude == 0 ||
+                      category.toggleInclude == null
+                      ? 1
+                      : 0
+                  );
+                  setCategory(newCat);
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={category.toggleInclude == 1}
+                  onChange={() => {}}
+                />
+                {"  "}
+                <span>Toggle Include?</span>
+              </div>
+              <div
+                className="cursor-pointer"
+                onClick={(e) => {
+                  let newCat = getNewCategory(
                     "useCurrentMonth",
                     category.useCurrentMonth == 0 ||
                       category.useCurrentMonth == null

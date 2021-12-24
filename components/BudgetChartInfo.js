@@ -5,7 +5,7 @@ import Axios from "axios";
 import BudgetCategoryInfo from "./BudgetCategoryInfo";
 import MyModal from "./MyModal";
 
-import getCategoryAmountModified from "../utils";
+import { getCategoryAmountModified } from "../utils";
 
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
 import BudgetCategoryInfoListItem from "./BudgetCategoryInfoListItem";
@@ -91,6 +91,7 @@ function BudgetChartInfo({
               repeatFreqNum: existingCat.repeatFreqNum,
               repeatFreqType: existingCat.repeatFreqType,
               useCurrentMonth: existingCat.useCurrentMonth,
+              toggleInclude: existingCat.toggleInclude,
               // numYearsPassed: existingCat.numYearsPassed,
             });
           } else {
@@ -119,6 +120,7 @@ function BudgetChartInfo({
                 repeatFreqNum: rem.repeatFreqNum,
                 repeatFreqType: rem.repeatFreqType,
                 useCurrentMonth: rem.useCurrentMonth,
+                toggleInclude: rem.toggleInclude,
                 // numYearsPassed: rem.numYearsPassed,
               });
             } else {
@@ -134,6 +136,7 @@ function BudgetChartInfo({
                 repeatFreqNum: null,
                 repeatFreqType: null,
                 useCurrentMonth: 0,
+                toggleInclude: 0,
                 // numYearsPassed: 0,
               });
             }

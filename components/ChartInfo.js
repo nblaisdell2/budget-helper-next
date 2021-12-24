@@ -4,8 +4,9 @@ import UpcomingExpensesInfo from "./UpcomingExpensesInfo";
 
 function ChartInfo({
   type,
-  categories,
   sixMonthDetails,
+  setSixMonthDetails,
+  categories,
   setUserCategories,
   userCategoryList,
   setUserCategoryList,
@@ -26,7 +27,14 @@ function ChartInfo({
           />
         );
       case "Six Month Details":
-        return <SixMonthInfo userDetails={userDetails} setUserDetails={setUserDetails} sixMonthDetails={sixMonthDetails} />;
+        return (
+          <SixMonthInfo
+            userDetails={userDetails}
+            setUserDetails={setUserDetails}
+            sixMonthDetails={sixMonthDetails}
+            setSixMonthDetails={setSixMonthDetails}
+          />
+        );
       case "Upcoming Expenses":
         return <UpcomingExpensesInfo />;
       default:

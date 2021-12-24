@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
 import { Chart } from "react-google-charts";
-import getCategoryAmountModified from "../utils.js";
+import { getCategoryAmountModified } from "../utils.js";
 
 function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const { user, isLoading } = useUser();
@@ -110,10 +110,8 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
         UserID: userDetails.UserID,
         MonthlyAmount: monthlyAmount,
       })
-        .then((repsonse) => {
-        })
-        .catch((err) => {
-        });
+        .then((repsonse) => {})
+        .catch((err) => {});
     } else {
       sessionStorage.setItem("monthlyAmount", monthlyAmount);
     }

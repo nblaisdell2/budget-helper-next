@@ -14,21 +14,31 @@ function SixMonthChart({ sixMonthDetails }) {
     vAxis: {
       viewWindow: {
         min: 0,
-        max: 12,
+        max:
+          sixMonthDetails.monthsAheadTarget > 12
+            ? sixMonthDetails.monthsAheadTarget * 1.25
+            : 12,
       },
     },
   };
 
   const chartData = () => {
     let data = [["BillName", "Months Ahead", { role: "style" }, "Target"]];
+    data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
+
     for (let i = 0; i < sixMonthDetails.categories.length; i++) {
       let currCat = sixMonthDetails.categories[i];
 
       let barColor = "red";
-      if (currCat.monthsAhead >= 3 && currCat.monthsAhead <= 5) {
+      let percentMet = currCat.monthsAhead / sixMonthDetails.monthsAheadTarget;
+      if (percentMet >= 0.3 && percentMet < 1) {
         barColor = "gold";
-      } else if (currCat.monthsAhead >= 6) {
+      } else if (percentMet >= 1) {
         barColor = "green";
+      }
+
+      if (currCat.monthsAhead <= 0) {
+        barColor = "";
       }
 
       data.push([
@@ -38,6 +48,9 @@ function SixMonthChart({ sixMonthDetails }) {
         sixMonthDetails.monthsAheadTarget,
       ]);
     }
+
+    data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
+
     return data;
   };
 

@@ -5,8 +5,9 @@ import { useUser } from "@auth0/nextjs-auth0";
 function Results({
   name,
   changeWidget,
-  categories,
   sixMonthDetails,
+  setSixMonthDetails,
+  categories,
   setUserCategories,
   userCategoryList,
   setUserCategoryList,
@@ -24,16 +25,18 @@ function Results({
       <div className="flex min-h-full max-h-[650px]">
         <ChartSection
           type={name}
-          categories={categories}
           sixMonthDetails={sixMonthDetails}
+          setSixMonthDetails={setSixMonthDetails}
+          categories={categories}
           userDetails={userDetails}
           setUserDetails={setUserDetails}
           userCategoryList={userCategoryList}
         />
         <ChartInfo
           type={name}
-          categories={categories}
           sixMonthDetails={sixMonthDetails}
+          setSixMonthDetails={setSixMonthDetails}
+          categories={categories}
           setUserCategories={setUserCategories}
           userCategoryList={userCategoryList}
           setUserCategoryList={setUserCategoryList}

@@ -2,12 +2,20 @@ import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
 import CheckIcon from "@heroicons/react/outline/CheckIcon";
 import { useState } from "react";
 import Axios from "axios";
+import { getSixMonthTargetMetCount } from "../utils";
 
-function SixMonthInfo({ userDetails, setUserDetails, sixMonthDetails }) {
+function SixMonthInfo({
+  userDetails,
+  setUserDetails,
+  sixMonthDetails,
+  setSixMonthDetails,
+}) {
   console.log(sixMonthDetails);
 
   const [editingTarget, setEditingTarget] = useState(false);
-  const [tempTargetAmt, setTempTargetAmt] = useState(sixMonthDetails.monthsAheadTarget);
+  const [tempTargetAmt, setTempTargetAmt] = useState(
+    sixMonthDetails.monthsAheadTarget
+  );
 
   return (
     <div className="flex flex-col justify-around items-center h-full">
@@ -39,28 +47,37 @@ function SixMonthInfo({ userDetails, setUserDetails, sixMonthDetails }) {
                   UserID: userDetails.UserID,
                   MonthsAheadTarget: tempTargetAmt,
                 })
-                  .then((repsonse) => {
-                    let newUserDetails = {...userDetails};
+                  .then((response) => {
+                    let newUserDetails = { ...userDetails };
                     newUserDetails.MonthsAheadTarget = tempTargetAmt;
 
+                    let newSixMoDt = { ...sixMonthDetails };
+                    newSixMoDt.monthsAheadTarget = tempTargetAmt;
+                    newSixMoDt.targetMetCount = getSixMonthTargetMetCount(
+                      newSixMoDt.categories,
+                      tempTargetAmt
+                    );
+
                     setUserDetails(newUserDetails);
+                    setSixMonthDetails(newSixMoDt);
+
                     setEditingTarget(false);
                   })
-                  .catch((err) => {
-                  });
+                  .catch((err) => {});
                 // updateMontlyIncome();
               }}
             />
           </div>
         ) : (
           <div className="flex justify-evenly items-center">
-            <div className="text-3xl mr-3">
-              {tempTargetAmt}
-            </div>
+            <div className="text-3xl mr-3">{tempTargetAmt}</div>
             <div>
-              <PencilAltIcon className="h-8 cursor-pointer hover:text-gray-500" onClick={() => {
-                setEditingTarget(!editingTarget);
-              }} />
+              <PencilAltIcon
+                className="h-8 cursor-pointer hover:text-gray-500"
+                onClick={() => {
+                  setEditingTarget(!editingTarget);
+                }}
+              />
             </div>
           </div>
         )}
