@@ -41,6 +41,7 @@ function CategoryModal({ categories, addToList, closeModal }) {
                     }
                   }}
                   checked={isChecked}
+                  onChange={() => {}}
                 />
                 <span className="cursor-pointer">
                   {"  "}
@@ -57,7 +58,11 @@ function CategoryModal({ categories, addToList, closeModal }) {
                           addToList(itemc.id, "category", !itemc.inUserList);
                         }}
                       >
-                        <input type="checkbox" checked={itemc.inUserList} />
+                        <input
+                          type="checkbox"
+                          checked={itemc.inUserList}
+                          onChange={() => {}}
+                        />
                         {"  "}
                         <span>{itemc.name}</span>
                       </li>

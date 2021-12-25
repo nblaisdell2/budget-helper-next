@@ -300,6 +300,8 @@ function BudgetChartInfo({
   console.log(userCategoryList);
 
   let listItems = getCategoryListItems();
+  console.log("listItems");
+  console.log(listItems);
 
   return (
     <div>
