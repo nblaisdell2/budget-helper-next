@@ -20,6 +20,13 @@ function AutomationReviewModal({
       return a + b.amountNum;
     }, 0);
 
+  let freq = nextAutoRuns[0].Frequency;
+  if (freq == "Every Week") {
+    grandTotal /= 4;
+  } else if (freq == "Every 2 Weeks") {
+    grandTotal /= 2;
+  }
+
   const deleteAutomationRuns = () => {
     Axios.post("/api/db/delete_automation_runs", {
       UserID: userDetails.UserID,
@@ -68,6 +75,13 @@ function AutomationReviewModal({
             </div>
           </div>
           {myListItems.map((v, i) => {
+            let amtNum = v.amountNum;
+            if (freq == "Every Week") {
+              amtNum /= 4;
+            } else if (freq == "Every 2 Weeks") {
+              amtNum /= 2;
+            }
+
             return (
               <div
                 className={`flex justify-between ${
@@ -78,7 +92,7 @@ function AutomationReviewModal({
                   {v.category}
                 </div>
                 <div className={`${v.isParent ? "font-bold" : ""}`}>
-                  {"$" + v.amountNum.toFixed(2)}
+                  {"$" + amtNum.toFixed(2)}
                 </div>
               </div>
             );
