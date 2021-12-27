@@ -17,7 +17,12 @@ function BudgetChartInfo({
   setUserCategoryList,
   userDetails,
   setUserDetails,
+  nextAutoRuns,
+  setNextAutoRuns,
 }) {
+  console.log("Budget Chart INFO");
+  console.log(nextAutoRuns);
+
   const [ModalItem, setModalItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
@@ -179,6 +184,17 @@ function BudgetChartInfo({
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
   }
 
+  function treatAsUTC(date) {
+    var result = new Date(date);
+    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+    return result;
+  }
+
+  function daysBetween(startDate, endDate) {
+    var millisecondsPerDay = 24 * 60 * 60 * 1000;
+    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
+  }
+
   const getNextAutoRunString = (nextRun) => {
     let strNextRun = "";
     let dtNextRun = new Date(nextRun);
@@ -188,12 +204,12 @@ function BudgetChartInfo({
       .replace(",", " @")
       .replace(":00:00", "");
 
-    let numDays = dtNextRun.getDate() - new Date().getDate();
-    if (numDays == 0) {
+    let numDays = daysBetween(new Date(), dtNextRun);
+    if (numDays.toFixed(0) == 0) {
       strNextRun +=
         " (" + (dtNextRun.getHours() - new Date().getHours()) + " hours)";
     } else {
-      strNextRun += " (" + numDays + " days)";
+      strNextRun += " (" + numDays.toFixed(0) + " days)";
     }
 
     return strNextRun;
@@ -212,6 +228,7 @@ function BudgetChartInfo({
         id: currItem.id,
         category: currItem.name,
         amount: "$" + groupTotalModified.toFixed(0),
+        amountNum: groupTotalModified,
         percentIncome:
           (userDetails.MonthlyAmount == 0
             ? 0
@@ -239,6 +256,7 @@ function BudgetChartInfo({
               currCat.categoryAmount +
               ")"
             : "$" + catAmtMod.toFixed(2),
+          amountNum: showOther ? catAmtMod : currCat.categoryAmount,
           percentIncome:
             (userDetails.MonthlyAmount == 0
               ? 0
@@ -373,7 +391,7 @@ function BudgetChartInfo({
 
       <hr />
 
-      <div className="flex flex-row justify-between mt-3">
+      <div className="flex flex-row justify-between mt-3 items-center">
         <h2
           className="hover:underline cursor-pointer"
           onClick={() => setModalItem("Automation")}
@@ -404,6 +422,9 @@ function BudgetChartInfo({
         userCategoryList={userCategoryList}
         userDetails={userDetails}
         setUserDetails={setUserDetails}
+        nextAutoRuns={nextAutoRuns}
+        setNextAutoRuns={setNextAutoRuns}
+        listItems={listItems}
       />
     </div>
   );

@@ -48,7 +48,11 @@ function query(res, spName, params) {
     })
     .then((result) => {
       console.log(result);
-      res.send(JSON.stringify(result.recordset));
+      res.send(
+        JSON.stringify(
+          result.recordsets.length > 1 ? result.recordsets : result.recordset
+        )
+      );
     })
     .catch((err) => {
       console.log(err);

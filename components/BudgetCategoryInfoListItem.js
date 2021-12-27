@@ -13,10 +13,6 @@ function BudgetCategoryInfoListItem({
   userCategoryList,
   setUserCategoryList,
 }) {
-  console.log("individual list item");
-  console.log(isParent);
-  console.log(isExpanded);
-
   return (
     (isParent && (
       <tr

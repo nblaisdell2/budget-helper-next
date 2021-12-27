@@ -13,6 +13,8 @@ function Results({
   setUserCategoryList,
   userDetails,
   setUserDetails,
+  nextAutoRuns,
+  setNextAutoRuns,
 }) {
   const { user, isLoading } = useUser();
 
@@ -42,6 +44,8 @@ function Results({
           setUserCategoryList={setUserCategoryList}
           userDetails={userDetails}
           setUserDetails={setUserDetails}
+          nextAutoRuns={nextAutoRuns}
+          setNextAutoRuns={setNextAutoRuns}
         />
       </div>
     </div>

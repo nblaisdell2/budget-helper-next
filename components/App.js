@@ -11,6 +11,7 @@ import { getSixMonthTargetMetCount, setMonthDetails } from "../utils.js";
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
+  const [nextAutoRuns, setNextAutoRuns] = useState([]);
   const [userCategories, setUserCategories] = useState({});
   const [userCategoryList, setUserCategoryList] = useState([]);
   const [ynabTokens, setYnabTokens] = useState({});
@@ -128,9 +129,14 @@ function App() {
           if (response.data.length === 0) {
             addUser();
           } else {
+            console.log("response from database!");
+            console.log(response);
+            console.log(response.data[1]);
+
             // If a NEW user logs in, if there were any results saved from the previous session, let's save
             // the results to the database so they don't have to start over.
-            let newUserDetails = { ...response.data[0] };
+            let newUserDetails = { ...response.data[0][0] };
+            setNextAutoRuns([...response.data[1]]);
 
             if (newUserID !== null) {
               saveSessionResultsInDB(newUserDetails);
@@ -445,6 +451,8 @@ function App() {
     <div>
       <Header accessToken={ynabTokens.accessToken} />
       <BudgetHelper
+        nextAutoRuns={nextAutoRuns}
+        setNextAutoRuns={setNextAutoRuns}
         sixMonthDetails={sixMonthDetails}
         setSixMonthDetails={setSixMonthDetails}
         categories={userCategories}

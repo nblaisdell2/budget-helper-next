@@ -4,6 +4,8 @@ import Results from "../components/Results";
 import { useUser } from "@auth0/nextjs-auth0";
 
 function BudgetHelper({
+  nextAutoRuns,
+  setNextAutoRuns,
   sixMonthDetails,
   setSixMonthDetails,
   categories,
@@ -39,6 +41,8 @@ function BudgetHelper({
         setUserCategoryList={setUserCategoryList}
         userDetails={userDetails}
         setUserDetails={setUserDetails}
+        nextAutoRuns={nextAutoRuns}
+        setNextAutoRuns={setNextAutoRuns}
       />
     </div>
   );

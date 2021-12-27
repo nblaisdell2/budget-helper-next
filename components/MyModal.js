@@ -7,7 +7,7 @@ const customStyles = {
   content: {
     top: "50%",
     left: "50%",
-    right: "70%",
+    right: "65%",
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
@@ -34,6 +34,9 @@ function MyModal(props) {
     setIsOpen(props.currModal != null);
   }, [props.currModal]);
 
+  console.log("Modal Props");
+  console.log(props);
+
   return (
     <Modal
       isOpen={modalIsOpen}
@@ -58,6 +61,9 @@ function MyModal(props) {
               // userID={props.userID}
               // budgetID={props.budgetID}
               setUserDetails={props.setUserDetails}
+              nextAutoRuns={props.nextAutoRuns}
+              setNextAutoRuns={props.setNextAutoRuns}
+              listItems={props.listItems}
             />
           )))}
     </Modal>
