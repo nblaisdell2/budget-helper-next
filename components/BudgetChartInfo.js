@@ -20,9 +20,6 @@ function BudgetChartInfo({
   nextAutoRuns,
   setNextAutoRuns,
 }) {
-  console.log("Budget Chart INFO");
-  console.log(nextAutoRuns);
-
   const [ModalItem, setModalItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [changesMade, setChangesMade] = useState(false);
@@ -314,12 +311,7 @@ function BudgetChartInfo({
     );
   }
 
-  console.log("User-List Categories");
-  console.log(userCategoryList);
-
   let listItems = getCategoryListItems();
-  console.log("listItems");
-  console.log(listItems);
 
   return (
     <div>

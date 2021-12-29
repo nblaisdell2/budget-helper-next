@@ -25,6 +25,8 @@ function AutomationEditModal({
   autoDate,
   setAutoDate,
   setNextAutoRuns,
+  tempAutoRuns,
+  setTempAutoRuns,
 }) {
   useEffect(() => {
     setDayOfWeek(
@@ -404,9 +406,6 @@ function AutomationEditModal({
 
                 //   saveAutomationResults();
 
-                console.log("setting auto runs");
-                console.log(autoDate);
-
                 let dtWithTime = new Date(autoDate);
                 let numHours =
                   amPM == "AM" ? parseInt(timeOfDay) : parseInt(timeOfDay) + 12;
@@ -456,6 +455,8 @@ function AutomationEditModal({
                     let daysToAdd = weekNum - dtWithTime.getDay();
                     if (daysToAdd < 0) {
                       daysToAdd += 7;
+                    } else if (daysToAdd == 0 && dtWithTime < new Date()) {
+                      daysToAdd += 7;
                     }
 
                     dtWithTime = new Date(
@@ -500,7 +501,9 @@ function AutomationEditModal({
                     dtWithTime = dtTemp;
                   }
 
-                  setNextAutoRuns(newAutoRunList);
+                  // setNextAutoRuns(newAutoRunList);
+                  console.log("SETTING TEMP LIST!!!!!");
+                  setTempAutoRuns(newAutoRunList);
                 }
 
                 setShowReview(true);

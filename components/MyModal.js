@@ -34,9 +34,6 @@ function MyModal(props) {
     setIsOpen(props.currModal != null);
   }, [props.currModal]);
 
-  console.log("Modal Props");
-  console.log(props);
-
   return (
     <Modal
       isOpen={modalIsOpen}

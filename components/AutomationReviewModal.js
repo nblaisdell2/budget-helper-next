@@ -1,6 +1,7 @@
 import MinusCircleIcon from "@heroicons/react/outline/MinusCircleIcon";
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
 import CheckIcon from "@heroicons/react/outline/CheckIcon";
+import ArrowLeftIcon from "@heroicons/react/outline/ArrowLeftIcon";
 import Axios from "axios";
 import Router from "next/router";
 
@@ -12,6 +13,8 @@ function AutomationReviewModal({
   userList,
   listItems,
   saveAutomationResults,
+  tempAutoRuns,
+  setTempAutoRuns,
 }) {
   let myListItems = listItems.filter((x) => x.amountNum > 0);
   let grandTotal = myListItems
@@ -20,7 +23,7 @@ function AutomationReviewModal({
       return a + b.amountNum;
     }, 0);
 
-  let freq = nextAutoRuns[0].Frequency;
+  let freq = (tempAutoRuns || nextAutoRuns)[0].Frequency;
   if (freq == "Every Week") {
     grandTotal /= 4;
   } else if (freq == "Every 2 Weeks") {
@@ -47,11 +50,25 @@ function AutomationReviewModal({
 
       {/* Next Auto Runs List */}
       <div className="flex flex-col mt-5">
-        <div className="font-bold text-xl uppercase">Next Auto Run(s)</div>
-        <div className="h-[175px] w-full overflow-y-auto flex flex-col items-center border-2 border-black rounded-md">
-          {nextAutoRuns?.map((v, i) => {
+        <div className="">
+          <div
+            onClick={() => {
+              setTempAutoRuns([]);
+              setShowReview(false);
+            }}
+            className="float-left font-bold flex hover:underline hover:cursor-pointer"
+          >
+            <ArrowLeftIcon className="h-6 w-6 mr-1" />
+            <p>Edit Schedule</p>
+          </div>
+          <div className="text-center font-bold text-xl uppercase mr-32">
+            Next Auto Run(s)
+          </div>
+        </div>
+        <div className="h-[120px] w-full overflow-y-auto flex flex-col items-center border-2 border-black rounded-md">
+          {tempAutoRuns?.map((v, i) => {
             return (
-              <div key={i} className={`${i == 0 ? "font-bold" : ""} text-xl`}>
+              <div key={i} className={`${i == 0 ? "font-bold" : ""} text-lg`}>
                 {new Date(v.RunTime).toLocaleString().replace(",", " @")}
               </div>
             );
@@ -61,13 +78,14 @@ function AutomationReviewModal({
 
       {/* Total & Category Amounts */}
       <div className="mt-5">
-        <div className="font-bold text-xl uppercase">
+        <div className="font-bold text-xl uppercase text-center">
           Amounts Posted to YNAB on{" "}
-          {new Date(nextAutoRuns[0].RunTime)
-            .toLocaleString()
-            .replace(",", " @")}
+          {tempAutoRuns &&
+            new Date(tempAutoRuns[0].RunTime)
+              .toLocaleString()
+              .replace(",", " @")}
         </div>
-        <div className="h-[225px] overflow-y-auto border-2 border-black rounded-md p-2">
+        <div className="h-[290px] overflow-y-auto border-2 border-black rounded-md p-2">
           <div className="flex justify-between border-b-2 border-black">
             <div className="font-bold text-xl">Total</div>
             <div className="font-bold text-2xl text-green-500">
@@ -84,6 +102,7 @@ function AutomationReviewModal({
 
             return (
               <div
+                key={i}
                 className={`flex justify-between ${
                   v.isParent ? "" : " hover:bg-gray-300"
                 }`}
@@ -101,8 +120,8 @@ function AutomationReviewModal({
       </div>
 
       {/* Buttons */}
-      <div className="h-full w-full sticky bottom-0 flex justify-evenly items-end">
-        <button
+      <div className="h-full w-full sticky bottom-0 flex justify-between items-end">
+        {/* <button
           onClick={() => {
             setNextAutoRuns([]);
             setShowReview(false);
@@ -111,27 +130,29 @@ function AutomationReviewModal({
         >
           <PencilAltIcon className="h-6 w-6 mr-1" />
           <p>Edit Schedule</p>
-        </button>
+        </button> */}
 
         <button
           onClick={() => {
             saveAutomationResults();
           }}
-          className="rounded-md p-3 bg-gray-300 hover:bg-blue-400 hover:text-white font-bold flex items-center"
+          className="rounded-md p-3 bg-gray-300 hover:bg-blue-400 hover:text-white font-bold flex flex-grow items-center justify-center mx-1 text-lg"
         >
           <CheckIcon className="h-6 w-6 text-green-600 mr-1" />
           <p>Save and Exit</p>
         </button>
 
-        <button
-          onClick={() => {
-            deleteAutomationRuns();
-          }}
-          className="rounded-md p-3 bg-gray-300 hover:bg-blue-400 hover:text-white font-bold flex items-center"
-        >
-          <MinusCircleIcon className="h-6 w-6 text-red-600 mr-1" />
-          <p>Cancel Automation</p>
-        </button>
+        {userDetails.NextAutomatedRun && (
+          <button
+            onClick={() => {
+              deleteAutomationRuns();
+            }}
+            className="rounded-md p-3 bg-gray-300 hover:bg-blue-400 hover:text-white font-bold flex flex-grow items-center justify-center mx-1 text-lg"
+          >
+            <MinusCircleIcon className="h-6 w-6 text-red-600 mr-1" />
+            <p>Cancel Automation</p>
+          </button>
+        )}
       </div>
     </div>
   );

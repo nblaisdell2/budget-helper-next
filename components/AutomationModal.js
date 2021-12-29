@@ -13,9 +13,6 @@ function AutomationModal({
   setNextAutoRuns,
   listItems,
 }) {
-  console.log("automation modal user details");
-  console.log(userDetails);
-
   const [showReview, setShowReview] = useState(
     userDetails.NextAutomatedRun ? true : false
   );
@@ -28,6 +25,8 @@ function AutomationModal({
   const [timeOfDay, setTimeOfDay] = useState("8");
   const [amPM, setAmPm] = useState("AM");
   const [autoDate, setAutoDate] = useState(new Date());
+
+  const [tempAutoRuns, setTempAutoRuns] = useState(nextAutoRuns);
 
   const saveAutomationResults = () => {
     if (scheduleChanged) {
@@ -51,6 +50,9 @@ function AutomationModal({
     }
   };
 
+  console.log("Show Review section?");
+  console.log(showReview);
+
   if (showReview) {
     return (
       <AutomationReviewModal
@@ -61,6 +63,8 @@ function AutomationModal({
         userList={userList}
         listItems={listItems}
         saveAutomationResults={saveAutomationResults}
+        tempAutoRuns={tempAutoRuns}
+        setTempAutoRuns={setTempAutoRuns}
       />
     );
   }
@@ -88,6 +92,8 @@ function AutomationModal({
       autoDate={autoDate}
       setAutoDate={setAutoDate}
       setNextAutoRuns={setNextAutoRuns}
+      tempAutoRuns={tempAutoRuns}
+      setTempAutoRuns={setTempAutoRuns}
     />
   );
 }

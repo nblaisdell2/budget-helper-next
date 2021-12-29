@@ -129,10 +129,6 @@ function App() {
           if (response.data.length === 0) {
             addUser();
           } else {
-            console.log("response from database!");
-            console.log(response);
-            console.log(response.data[1]);
-
             // If a NEW user logs in, if there were any results saved from the previous session, let's save
             // the results to the database so they don't have to start over.
             let newUserDetails = { ...response.data[0][0] };
@@ -187,8 +183,6 @@ function App() {
   // On First Load
   useEffect(() => {
     if (!isLoading) {
-      console.log("First Load");
-
       // Check to see if we are returning to the page from Connecting to YNAB.
       // If so, use the code returned by them to get an API access token
       if (router.asPath && router.asPath.substring(0, 6) == "/?code") {

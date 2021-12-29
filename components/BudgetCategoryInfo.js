@@ -8,9 +8,6 @@ function BudgetCategoryInfo({
   monthlyAmount,
   setChangesMade,
 }) {
-  console.log("passed in category");
-  console.log(category);
-
   const [showUpcoming, setShowUpcoming] = useState(
     category.upcomingExpense !== null
   );

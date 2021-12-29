@@ -10,8 +10,6 @@ function SixMonthInfo({
   sixMonthDetails,
   setSixMonthDetails,
 }) {
-  console.log(sixMonthDetails);
-
   const [editingTarget, setEditingTarget] = useState(false);
   const [tempTargetAmt, setTempTargetAmt] = useState(
     sixMonthDetails.monthsAheadTarget
