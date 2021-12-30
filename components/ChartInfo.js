@@ -14,6 +14,13 @@ function ChartInfo({
   setUserDetails,
   nextAutoRuns,
   setNextAutoRuns,
+  upExpenseInd,
+  dayOfWeek,
+  setDayOfWeek,
+  dayOfMonth,
+  setDayOfMonth,
+  upcoming,
+  setUpcoming,
 }) {
   const renderChartInfo = (type) => {
     switch (type) {
@@ -40,14 +47,26 @@ function ChartInfo({
           />
         );
       case "Upcoming Expenses":
-        return <UpcomingExpensesInfo />;
+        return (
+          <UpcomingExpensesInfo
+            userDetails={userDetails}
+            upExpenseInd={upExpenseInd}
+            userCategoryList={userCategoryList}
+            dayOfWeek={dayOfWeek}
+            setDayOfWeek={setDayOfWeek}
+            dayOfMonth={dayOfMonth}
+            setDayOfMonth={setDayOfMonth}
+            upcoming={upcoming}
+            setUpcoming={setUpcoming}
+          />
+        );
       default:
         return <div>No Data</div>;
     }
   };
 
   return (
-    <div className="w-2/5 border-2 border-gray-400 p-5 rounded-3xl ml-3 shadow-2xl h-[640px] ">
+    <div className="w-2/5 border-2 border-gray-400 p-5 rounded-3xl ml-3 shadow-2xl h-[640px]">
       {renderChartInfo(type, categories)}
     </div>
   );

@@ -10,6 +10,14 @@ function ChartSection({
   userDetails,
   setUserDetails,
   userCategoryList,
+  setUpcomingExpensesInfo,
+  upExpenseInd,
+  dayOfWeek,
+  setDayOfWeek,
+  dayOfMonth,
+  setDayOfMonth,
+  upcoming,
+  setUpcoming,
 }) {
   const { user, isLoading } = useUser();
 
@@ -30,6 +38,14 @@ function ChartSection({
           <UpcomingExpensesChart
             userDetails={userDetails}
             userCategoryList={userCategoryList}
+            setUpcomingExpensesInfo={setUpcomingExpensesInfo}
+            upExpenseInd={upExpenseInd}
+            dayOfWeek={dayOfWeek}
+            setDayOfWeek={setDayOfWeek}
+            dayOfMonth={dayOfMonth}
+            setDayOfMonth={setDayOfMonth}
+            upcoming={upcoming}
+            setUpcoming={setUpcoming}
           />
         );
     }

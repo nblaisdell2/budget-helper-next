@@ -84,16 +84,18 @@ function SixMonthInfo({
       <div className="mt-10 flex flex-col items-center">
         <div className="text-3xl font-bold">Categories w/ Target Met</div>
         <div className="text-3xl">
-          {sixMonthDetails.targetMetCount +
-            " / " +
-            sixMonthDetails.categories.length +
-            " (" +
-            (
-              (sixMonthDetails.targetMetCount /
-                sixMonthDetails.categories.length) *
-              100
-            ).toFixed(0) +
-            "%)"}
+          {sixMonthDetails && sixMonthDetails.categories.length
+            ? sixMonthDetails.targetMetCount +
+              " / " +
+              sixMonthDetails.categories.length +
+              " (" +
+              (
+                (sixMonthDetails.targetMetCount /
+                  sixMonthDetails.categories.length) *
+                100
+              ).toFixed(0) +
+              "%)"
+            : "N/A"}
         </div>
       </div>
     </div>

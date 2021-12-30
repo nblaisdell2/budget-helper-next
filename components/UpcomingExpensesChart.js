@@ -1,159 +1,32 @@
 import { useEffect, useState } from "react";
-import { daysBetween, getAmountByFrequency, getLatestBalance } from "../utils";
+import {
+  calculateUpcomingExpenses,
+  calculateUpcomingExpensesForCategory,
+} from "../utils";
 
-function UpcomingExpensesChart({ userDetails, userCategoryList }) {
-  const [dayOfWeek, setDayOfWeek] = useState("Thu");
-  const [dayOfMonth, setDayOfMonth] = useState(1);
-
-  const [upcoming, setUpcoming] = useState([]);
-
-  const merge = (obj, fieldName) => {
-    let subArrays = obj.map((x) => x[fieldName]);
-    return subArrays.reduce((a, b) => {
-      return a.concat(b);
-    }, []);
-  };
-
-  const recalculateUpcomingExpenses = () => {
-    let upcomingTemp = [];
-    let potential = merge(userCategoryList, "categories").filter(
-      (x) => x.upcomingExpense !== null && x.categoryAmount > 0
-    );
-
-    for (let i = 0; i < potential.length; i++) {
-      let ynabLatestBalance = getLatestBalance(potential[i].id);
-      console.log("YNAB - Latest balance for " + potential[i].name);
-      console.log(ynabLatestBalance);
-
-      let dtWithTime = new Date();
-      dtWithTime.setHours(0, 0, 0, 0);
-
-      if (
-        userDetails.PayFrequency == "Every Week" ||
-        userDetails.PayFrequency == "Every 2 Weeks"
-      ) {
-        let weekNum = 0;
-        switch (dayOfWeek) {
-          case "Sun":
-            weekNum = 0;
-            break;
-          case "Mon":
-            weekNum = 1;
-            break;
-          case "Tue":
-            weekNum = 2;
-            break;
-          case "Wed":
-            weekNum = 3;
-            break;
-          case "Thu":
-            weekNum = 4;
-            break;
-          case "Fri":
-            weekNum = 5;
-            break;
-          case "Sat":
-            weekNum = 6;
-            break;
-          default:
-            break;
-        }
-
-        let daysToAdd = weekNum - dtWithTime.getDay();
-        if (daysToAdd < 0) {
-          daysToAdd += 7;
-        } else if (daysToAdd == 0 && dtWithTime < new Date()) {
-          daysToAdd += 7;
-        }
-
-        dtWithTime = new Date(
-          dtWithTime.setDate(dtWithTime.getDate() + daysToAdd)
-        );
-      } else if (userDetails.PayFrequency == "Monthly") {
-        let dtTemp = new Date();
-        if (dtTemp.getDate() > dayOfMonth) {
-          dtTemp = new Date(dtTemp.setMonth(dtTemp.getMonth() + 1));
-          dtTemp = new Date(dtTemp.setDate(dayOfMonth));
-        } else {
-          dtTemp = new Date(dtTemp.setDate(dayOfMonth));
-        }
-        dtWithTime = dtTemp;
-        dtWithTime.setHours(0, 0, 0, 0);
-      }
-
-      let totalPurchaseAmt = potential[i].upcomingExpense - ynabLatestBalance;
-      let amtPerPaycheck = getAmountByFrequency(
-        potential[i].categoryAmount,
-        userDetails.PayFrequency
-      );
-
-      let newAutoRunList = [];
-      do {
-        totalPurchaseAmt -= amtPerPaycheck;
-
-        newAutoRunList.push({
-          RunTime: dtWithTime.toISOString(),
-          Frequency: userDetails.PayFrequency,
-          AmtPerPaycheck: amtPerPaycheck,
-          TotalAmt: totalPurchaseAmt,
-        });
-
-        let dtTemp = new Date(dtWithTime);
-        switch (userDetails.PayFrequency) {
-          case "Every Week":
-            dtTemp = new Date(dtTemp.setDate(dtTemp.getDate() + 7));
-            break;
-          case "Every 2 Weeks":
-            dtTemp = new Date(dtTemp.setDate(dtTemp.getDate() + 14));
-            break;
-          case "Monthly":
-            dtTemp = new Date(dtTemp.setMonth(dtTemp.getMonth() + 1));
-            break;
-          default:
-            break;
-        }
-
-        dtWithTime = dtTemp;
-      } while (totalPurchaseAmt > 0);
-
-      console.log("Auto run list for paying off expense");
-      console.log(newAutoRunList);
-
-      let dtPurchaseDate = new Date(
-        newAutoRunList[newAutoRunList.length - 1].RunTime
-      );
-      let numPaychecks = newAutoRunList.length;
-      let numDaysToPurchase = daysBetween(new Date(), dtPurchaseDate);
-      upcomingTemp.push({
-        ItemName: potential[i].name,
-        ItemAmount:
-          "$" +
-          ynabLatestBalance.toFixed(0) +
-          " / $" +
-          potential[i].upcomingExpense.toFixed(0),
-        ItemDate: new Date(
-          newAutoRunList[newAutoRunList.length - 1].RunTime
-        ).toLocaleDateString("en-US"),
-        NumDays: numDaysToPurchase.toFixed(0),
-        NumPaychecks: numPaychecks,
-      });
-    }
-
-    console.log("upcoming expenses - BEFORE?");
-    console.log(upcomingTemp);
-
-    upcomingTemp.sort((a, b) =>
-      parseInt(a.NumDays) > parseInt(b.NumDays) ? 1 : -1
-    );
-
-    console.log("upcoming expenses - sorted?");
-    console.log(upcomingTemp);
-
-    setUpcoming(upcomingTemp);
-  };
+function UpcomingExpensesChart({
+  userDetails,
+  userCategoryList,
+  setUpcomingExpensesInfo,
+  upExpenseInd,
+  setUpExpenseInd,
+  dayOfWeek,
+  setDayOfWeek,
+  dayOfMonth,
+  setDayOfMonth,
+  upcoming,
+  setUpcoming,
+}) {
+  console.log(userCategoryList);
 
   useEffect(() => {
-    recalculateUpcomingExpenses();
+    let newUpcomingExpenses = calculateUpcomingExpenses(
+      userCategoryList,
+      dayOfWeek,
+      dayOfMonth,
+      userDetails.PayFrequency
+    );
+    setUpcoming(newUpcomingExpenses);
   }, [dayOfWeek, dayOfMonth]);
 
   return (
@@ -301,13 +174,30 @@ function UpcomingExpensesChart({ userDetails, userCategoryList }) {
 
           <tbody>
             {upcoming.map((v, i) => {
+              console.log("LOOK HERE");
+              console.log(upExpenseInd);
+              console.log(v);
               return (
-                <tr key={i} className="hover:bg-gray-200">
-                  <td>{v.ItemName}</td>
-                  <td className="text-right">{v.ItemAmount}</td>
-                  <td className="text-right">{v.ItemDate}</td>
-                  <td className="text-right">{v.NumDays}</td>
-                  <td className="text-right">
+                <tr
+                  key={i}
+                  className={`hover:bg-gray-200 ${
+                    v.ItemGroupID == upExpenseInd.ItemGroupID &&
+                    v.ItemID == upExpenseInd.ItemID
+                      ? "bg-gray-300"
+                      : ""
+                  } hover:cursor-pointer`}
+                  onClick={() => {
+                    console.log("setting expenses info");
+                    console.log(v);
+                    console.log(upcoming);
+                    setUpcomingExpensesInfo(v);
+                  }}
+                >
+                  <td className="p-1">{v.ItemName}</td>
+                  <td className="text-right p-1">{v.ItemAmount}</td>
+                  <td className="text-right p-1">{v.ItemDate}</td>
+                  <td className="text-right p-1">{v.NumDays}</td>
+                  <td className="text-right p-1">
                     <div className="mr-3">{v.NumPaychecks}</div>
                   </td>
                 </tr>
