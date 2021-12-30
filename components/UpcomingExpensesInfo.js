@@ -76,7 +76,7 @@ function UpcomingExpensesInfo({
                 .name
             }
           </div>
-          <div className="text-5xl font-bold">{catDetails.name}</div>
+          <div className="text-4xl font-bold">{catDetails.name}</div>
         </div>
         <div className="w-72 flex flex-col justify-evenly">
           <div className="flex justify-between border-b border-black">
