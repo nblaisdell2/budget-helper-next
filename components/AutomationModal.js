@@ -19,7 +19,7 @@ function AutomationModal({
   const [scheduleChanged, setScheduleChanged] = useState(false);
 
   const [setupType, setSetupType] = useState(null);
-  const [frequency, setFrequency] = useState(null);
+  // const [frequency, setFrequency] = useState(null);
   const [dayOfWeek, setDayOfWeek] = useState(null);
   const [dayOfMonth, setDayOfMonth] = useState(1);
   const [timeOfDay, setTimeOfDay] = useState("8");
@@ -35,7 +35,7 @@ function AutomationModal({
         BudgetID: userDetails.DefaultBudgetID,
         SetupType: setupType,
         AutoDate: autoDate,
-        Frequency: frequency,
+        Frequency: userDetails.PayFrequency,
         DayOfWeek: dayOfWeek,
         DayOfMonth: dayOfMonth,
         TimeOfDay: timeOfDay,
@@ -79,8 +79,8 @@ function AutomationModal({
       setScheduleChanged={setScheduleChanged}
       setupType={setupType}
       setSetupType={setSetupType}
-      frequency={frequency}
-      setFrequency={setFrequency}
+      // frequency={frequency}
+      // setFrequency={setFrequency}
       dayOfWeek={dayOfWeek}
       setDayOfWeek={setDayOfWeek}
       dayOfMonth={dayOfMonth}

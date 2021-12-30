@@ -1,6 +1,6 @@
 import BudgetChart from "./BudgetChart";
 import SixMonthChart from "./SixMonthChart";
-import UpcomingExpenses from "./UpcomingExpenses";
+import UpcomingExpensesChart from "./UpcomingExpensesChart";
 import { useUser } from "@auth0/nextjs-auth0";
 
 function ChartSection({
@@ -12,6 +12,7 @@ function ChartSection({
   userCategoryList,
 }) {
   const { user, isLoading } = useUser();
+
   const renderChartDetails = (type) => {
     switch (type) {
       case "Budget Chart":
@@ -25,7 +26,12 @@ function ChartSection({
       case "Six Month Details":
         return <SixMonthChart sixMonthDetails={sixMonthDetails} />;
       case "Upcoming Expenses":
-        return <UpcomingExpenses />;
+        return (
+          <UpcomingExpensesChart
+            userDetails={userDetails}
+            userCategoryList={userCategoryList}
+          />
+        );
     }
   };
 

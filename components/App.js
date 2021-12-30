@@ -27,6 +27,8 @@ function App() {
 
   const saveSessionResultsInDB = (userDetails) => {
     if (Object.keys(userDetails).length > 0) {
+      console.log("Saving session results to database, maybe!");
+
       // Setting monthly amount for new user from previous session
       let sess_monthlyAmt = sessionStorage.getItem("monthlyAmount");
       if (sess_monthlyAmt) {
@@ -38,6 +40,28 @@ function App() {
         })
           .then((repsonse) => {})
           .catch((err) => {});
+      }
+
+      // Setting paycheck frequency for new user from previous session
+      let sess_payFrequency = sessionStorage.getItem("payFrequency");
+      console.log("Did we get a pay frequency?");
+      console.log(sess_payFrequency);
+
+      if (sess_payFrequency) {
+        userDetails.PayFrequency = sess_payFrequency;
+
+        Axios.post("/api/db/update_pay_frequency", {
+          UserID: userDetails.UserID,
+          PayFrequency: sess_payFrequency,
+        })
+          .then((response) => {
+            console.log("Got response from updating pay frequency!");
+            console.log(response);
+          })
+          .catch((err) => {
+            console.log("Error from database");
+            console.log(err);
+          });
       }
 
       // Setting YNAB tokens for new user from previous session
@@ -126,9 +150,14 @@ function App() {
         },
       })
         .then((response) => {
-          if (response.data.length === 0) {
+          console.log("user details from database");
+          console.log(response);
+          if (response.data[0].length === 0) {
             addUser();
           } else {
+            console.log("What is the new user id?");
+            console.log(newUserID);
+
             // If a NEW user logs in, if there were any results saved from the previous session, let's save
             // the results to the database so they don't have to start over.
             let newUserDetails = { ...response.data[0][0] };
@@ -153,8 +182,10 @@ function App() {
         .catch((e) => {});
     } else {
       let monthlyAmt = sessionStorage.getItem("monthlyAmount");
+      let payFreq = sessionStorage.getItem("payFrequency");
       setUserDetails({
         MonthlyAmount: monthlyAmt ? parseInt(monthlyAmt) : 0,
+        PayFrequency: payFreq ? payFreq : "Every 2 Weeks",
       });
 
       let existingTokens = {
@@ -170,11 +201,15 @@ function App() {
   };
 
   const addUser = () => {
+    console.log("ADDING USER");
+
     Axios.post("/api/db/add_user", {
       user_email: user.email,
       user_name: user.nickname,
     }).then((response) => {
       let newUserID = response.data[0].UserID;
+      console.log("NEW USER ID");
+      console.log(newUserID);
 
       getUser(newUserID);
     });
@@ -263,6 +298,8 @@ function App() {
           let newCategories = { ...response.data.newCategories };
           let monthDetails = [...response.data.monthDetails];
           setMonthDetails(monthDetails);
+
+          console.log(monthDetails);
 
           // First, check to see if there are any stored categories
           // This can be from the database, if logged in, or from sessionStorage otherwise.

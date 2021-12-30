@@ -5,7 +5,7 @@ import Axios from "axios";
 import BudgetCategoryInfo from "./BudgetCategoryInfo";
 import MyModal from "./MyModal";
 
-import { getCategoryAmountModified } from "../utils";
+import { getCategoryAmountModified, daysBetween } from "../utils";
 
 import PencilAltIcon from "@heroicons/react/outline/PencilAltIcon";
 import BudgetCategoryInfoListItem from "./BudgetCategoryInfoListItem";
@@ -181,30 +181,19 @@ function BudgetChartInfo({
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
   }
 
-  function treatAsUTC(date) {
-    var result = new Date(date);
-    result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
-    return result;
-  }
-
-  function daysBetween(startDate, endDate) {
-    var millisecondsPerDay = 24 * 60 * 60 * 1000;
-    return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay;
-  }
-
   const getNextAutoRunString = (nextRun) => {
-    let strNextRun = "";
     let dtNextRun = new Date(nextRun);
+    let dtToday = new Date();
 
-    strNextRun = dtNextRun
+    let strNextRun = dtNextRun
       .toLocaleString()
       .replace(",", " @")
       .replace(":00:00", "");
 
-    let numDays = daysBetween(new Date(), dtNextRun);
+    let numDays = daysBetween(dtToday, dtNextRun);
     if (numDays.toFixed(0) == 0) {
       strNextRun +=
-        " (" + (dtNextRun.getHours() - new Date().getHours()) + " hours)";
+        " (" + (dtToday.getHours() - dtNextRun.getHours()) + " hours)";
     } else {
       strNextRun += " (" + numDays.toFixed(0) + " days)";
     }

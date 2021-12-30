@@ -12,8 +12,8 @@ function AutomationEditModal({
   setScheduleChanged,
   setupType,
   setSetupType,
-  frequency,
-  setFrequency,
+  // frequency,
+  // setFrequency,
   dayOfWeek,
   setDayOfWeek,
   dayOfMonth,
@@ -123,63 +123,11 @@ function AutomationEditModal({
           )) ||
             (setupType == "Scheduled" && (
               <div>
-                {/* Frequency (Weekly/Bi-weekly/Monthly) */}
-                <div className="flex flex-col mt-7">
-                  <div className="uppercase underline text-lg font-semibold">
-                    Frequency
-                  </div>
-                  <div className="flex">
-                    <div
-                      className="mr-5"
-                      onClick={() => setFrequency("Every Week")}
-                    >
-                      <input
-                        type="radio"
-                        checked={
-                          (frequency && frequency == "Every Week") || false
-                        }
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Every Week
-                      </label>
-                    </div>
-                    <div
-                      className="mr-5"
-                      onClick={() => setFrequency("Every 2 Weeks")}
-                    >
-                      <input
-                        type="radio"
-                        checked={
-                          (frequency && frequency == "Every 2 Weeks") || false
-                        }
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Every 2 Weeks
-                      </label>
-                    </div>
-                    <div
-                      className="mr-5"
-                      onClick={() => setFrequency("Monthly")}
-                    >
-                      <input
-                        type="radio"
-                        checked={(frequency && frequency == "Monthly") || false}
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Monthly
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Day of Week checkboxes (Weekly/Bi-weekly) OR Day of Month dropdown (1-31) (Monthly) */}
                 <div>
-                  {frequency &&
-                    (((frequency == "Every Week" ||
-                      frequency == "Every 2 Weeks") && (
+                  {userDetails.PayFrequency &&
+                    (((userDetails.PayFrequency == "Every Week" ||
+                      userDetails.PayFrequency == "Every 2 Weeks") && (
                       <div>
                         <div className="flex flex-col mt-7">
                           <div className="uppercase underline text-lg font-semibold">
@@ -295,7 +243,7 @@ function AutomationEditModal({
                         </div>
                       </div>
                     )) ||
-                      (frequency == "Monthly" && (
+                      (userDetails.PayFrequency == "Monthly" && (
                         <div className="flex flex-col mt-7">
                           <div className="uppercase underline text-lg font-semibold">
                             Day of Month
@@ -341,7 +289,7 @@ function AutomationEditModal({
                       )))}
                 </div>
 
-                {frequency && (dayOfWeek || dayOfMonth) && (
+                {(dayOfWeek || dayOfMonth) && (
                   <>
                     <div className="uppercase underline text-lg font-semibold mt-7">
                       Time of Day
@@ -393,8 +341,7 @@ function AutomationEditModal({
       </div>
 
       {setupType &&
-        ((frequency &&
-          (dayOfWeek || dayOfMonth) &&
+        (((dayOfWeek || dayOfMonth) &&
           timeOfDay &&
           amPM &&
           setupType == "Scheduled") ||
@@ -412,7 +359,8 @@ function AutomationEditModal({
                 dtWithTime.setHours(numHours, 0, 0, 0);
 
                 if (setupType == "One-Time") {
-                  setNextAutoRuns([
+                  setAutoDate(dtWithTime);
+                  setTempAutoRuns([
                     {
                       RunTime: dtWithTime.toISOString(),
                       Frequency: setupType,
@@ -422,8 +370,8 @@ function AutomationEditModal({
                   // determine how many days to add/subtract from the "dtWithTime"
                   // based on the dayOfWeek
                   if (
-                    frequency == "Every Week" ||
-                    frequency == "Every 2 Weeks"
+                    userDetails.PayFrequency == "Every Week" ||
+                    userDetails.PayFrequency == "Every 2 Weeks"
                   ) {
                     let weekNum = 0;
                     switch (dayOfWeek) {
@@ -452,6 +400,10 @@ function AutomationEditModal({
                         break;
                     }
 
+                    // TODO: Currently, I'm trying to put the days of the week on the "Upcoming Expenses" section,
+                    //       so I can know which day to choose for their paycheck day, and then I can calculate the
+                    //       rest of the data for the Upcoming Expenses table.
+
                     let daysToAdd = weekNum - dtWithTime.getDay();
                     if (daysToAdd < 0) {
                       daysToAdd += 7;
@@ -462,7 +414,7 @@ function AutomationEditModal({
                     dtWithTime = new Date(
                       dtWithTime.setDate(dtWithTime.getDate() + daysToAdd)
                     );
-                  } else if (frequency == "Monthly") {
+                  } else if (userDetails.PayFrequency == "Monthly") {
                     let dtTemp = new Date();
                     if (dtTemp.getDate() > dayOfMonth) {
                       dtTemp = new Date(dtTemp.setMonth(dtTemp.getMonth() + 1));
@@ -478,10 +430,10 @@ function AutomationEditModal({
                   for (let i = 0; i < 10; i++) {
                     newAutoRunList.push({
                       RunTime: dtWithTime.toISOString(),
-                      Frequency: frequency,
+                      Frequency: userDetails.PayFrequency,
                     });
                     let dtTemp = new Date(dtWithTime);
-                    switch (frequency) {
+                    switch (userDetails.PayFrequency) {
                       case "Every Week":
                         dtTemp = new Date(dtTemp.setDate(dtTemp.getDate() + 7));
                         break;

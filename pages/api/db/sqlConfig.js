@@ -1,3 +1,5 @@
+const { default: Results } = require("../../../components/Results");
+
 var sql = null;
 var sqlConfig = {};
 
@@ -48,11 +50,19 @@ function query(res, spName, params) {
     })
     .then((result) => {
       console.log(result);
-      res.send(
-        JSON.stringify(
-          result.recordsets.length > 1 ? result.recordsets : result.recordset
-        )
-      );
+      let dbResults = null;
+      // if (result.recordsets.length > 1) {
+
+      // } else {
+      //   dbResults
+      // }
+      // for(let i = 0; i < result.recordsets.length; i++) {
+      //   if (result.recordsets[i].length == 0)
+      // }
+
+      dbResults =
+        result.recordsets.length > 1 ? result.recordsets : result.recordset;
+      res.send(JSON.stringify(dbResults));
     })
     .catch((err) => {
       console.log(err);
