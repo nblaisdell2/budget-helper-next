@@ -295,7 +295,12 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
               </div>
               <div className="text-center">
                 <div className="font-semibold text-lg">AMOUNT REMAINING</div>
-                <div className="font-bold text-3xl">
+                <div
+                  className={`font-bold text-3xl ${
+                    parseInt((monthlyAmount - grandTotal).toFixed(0)) < 0 &&
+                    "text-red-500"
+                  }`}
+                >
                   {"$" + (monthlyAmount - grandTotal).toFixed(0)}
                 </div>
               </div>
@@ -311,7 +316,13 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
                   {(monthlyAmount == 0
                     ? 0
                     : (grandTotal / monthlyAmount) * 100
-                  ).toFixed(0) + "%"}
+                  ).toFixed(0) == "100" &&
+                  parseInt((monthlyAmount - grandTotal).toFixed(0)) > 0
+                    ? "99"
+                    : (monthlyAmount == 0
+                        ? 0
+                        : (grandTotal / monthlyAmount) * 100
+                      ).toFixed(0) + "%"}
                 </div>
               </div>
             </>
