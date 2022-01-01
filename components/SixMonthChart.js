@@ -2,14 +2,28 @@ import { Chart } from "react-google-charts";
 
 function SixMonthChart({ sixMonthDetails }) {
   const options = {
-    title: "Six Month Details",
-    legend: "bottom",
+    title: "",
+    fontSize: 14,
+    bold: true,
+    legend: "none",
+    bar: { groupWidth: "80%" },
+    chartArea: { width: "80%", height: "95%" },
+    axes: {
+      x: {
+        0: { side: "top", label: "White to move" }, // Top x-axis.
+      },
+    },
     backgroundColor: { fill: "transparent" },
     seriesType: "bars",
     series: {
       1: {
         type: "line",
         lineDashStyle: [8, 6],
+      },
+    },
+    vAxis: {
+      textStyle: {
+        bold: true,
       },
     },
     hAxis: {
@@ -25,7 +39,7 @@ function SixMonthChart({ sixMonthDetails }) {
 
   const chartData = () => {
     let data = [["BillName", "Months Ahead", { role: "style" }, "Target"]];
-    data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
+    // data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
 
     for (let i = 0; i < sixMonthDetails.categories.length; i++) {
       let currCat = sixMonthDetails.categories[i];
@@ -50,22 +64,27 @@ function SixMonthChart({ sixMonthDetails }) {
       ]);
     }
 
-    data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
+    // data.push(["", 0, "", sixMonthDetails.monthsAheadTarget]);
 
     return data;
   };
 
   return (
-    <div className="-mt-24">
-      <Chart
-        chartType="BarChart"
-        data={chartData()}
-        options={options}
-        width="100%"
-        height="725px"
-        legendToggle
-      />
-    </div>
+    <>
+      <div className="text-center font-bold  text-2xl mb-3">
+        Regular Expenses
+      </div>
+      <div className="h-[550px] overflow-y-auto">
+        <Chart
+          chartType="BarChart"
+          data={chartData()}
+          options={options}
+          width="100%"
+          height="1600px"
+          legendToggle
+        />
+      </div>
+    </>
   );
 }
 
