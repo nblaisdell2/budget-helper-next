@@ -4,6 +4,7 @@ function SixMonthChart({ sixMonthDetails }) {
   const options = {
     title: "Six Month Details",
     legend: "bottom",
+    backgroundColor: { fill: "transparent" },
     seriesType: "bars",
     series: {
       1: {
@@ -11,7 +12,7 @@ function SixMonthChart({ sixMonthDetails }) {
         lineDashStyle: [8, 6],
       },
     },
-    vAxis: {
+    hAxis: {
       viewWindow: {
         min: 0,
         max:
@@ -55,13 +56,13 @@ function SixMonthChart({ sixMonthDetails }) {
   };
 
   return (
-    <div>
+    <div className="-mt-24">
       <Chart
-        chartType="ComboChart"
+        chartType="BarChart"
         data={chartData()}
         options={options}
         width="100%"
-        height="400px"
+        height="725px"
         legendToggle
       />
     </div>
