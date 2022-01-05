@@ -167,7 +167,7 @@ function SetupBudgetModal({
           };
 
           console.log(
-            "Posting amount for " +
+            "Posting amount for   " +
               parentItems[i].name +
               " on " +
               monthsToSave[j].month +
