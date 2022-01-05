@@ -460,7 +460,7 @@ function AutomationEditModal({
 
                 setShowReview(true);
               }}
-              className="sticky mt-5 rounded-md bottom-0 p-3 w-full bg-gray-300 hover:bg-blue-500 hover:text-white font-bold"
+              className="sticky bottom-0 mt-5 p-3 w-full rounded-md bg-gray-300 hover:bg-blue-500 hover:text-white font-bold"
             >
               Review
             </button>

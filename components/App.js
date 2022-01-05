@@ -7,7 +7,11 @@ import BudgetHelper from "../pages/BudgetHelper";
 import Header from "./Header";
 
 import ynab_config from "../pages/config/ynab_oauth_config.json";
-import { getSixMonthTargetMetCount, setMonthDetails } from "../utils.js";
+import {
+  getLatestBalance,
+  getSixMonthTargetMetCount,
+  setMonthDetails,
+} from "../utils.js";
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
@@ -241,6 +245,9 @@ function App() {
   const getRefreshToken = () => {
     // First, check to see if the token has already expired
     // If it's still valid, no need to check for a refresh
+    console.log("Getting refresh tokens?");
+    console.log(ynabTokens);
+
     if (
       ynabTokens.expirationDate &&
       new Date() > new Date(ynabTokens.expirationDate)
@@ -296,6 +303,9 @@ function App() {
         },
       })
         .then((response) => {
+          console.log("Repsonse from YNAB");
+          console.log(response);
+
           let newCategories = { ...response.data.newCategories };
           let monthDetails = [...response.data.monthDetails];
           setMonthDetails(monthDetails);
@@ -397,7 +407,10 @@ function App() {
 
           setUserCategories(newCategories);
         })
-        .catch((err) => {});
+        .catch((err) => {
+          console.log("Error from YNAB");
+          getRefreshToken();
+        });
     }
   };
 
@@ -412,8 +425,14 @@ function App() {
       let currCats = sixCats[i].categories.filter(
         (x) => x.expenseType !== null
       );
+      for (let j = 0; j < currCats.length; j++) {
+        currCats[j].balance = getLatestBalance(currCats[j].id);
+      }
       newCats.push(...currCats);
     }
+
+    console.log("SETTING SIX MONTHS AGAIN!");
+    console.log(newCats);
 
     sixMoDt.categories = newCats;
 

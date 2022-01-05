@@ -13,15 +13,13 @@ module.exports.get_budget_categories = function (
   accToken,
   budgetID = "default"
 ) {
-
   return Axios.get(baseURL + "/budgets/" + budgetID + "/categories", {
     headers: {
       Authorization: "Bearer " + accToken,
     },
   })
     .then((response) => response.data)
-    .catch((err) => {
-    });
+    .catch((err) => {});
 };
 
 module.exports.get_budget_months = function (accToken, budgetID = "default") {
@@ -31,8 +29,7 @@ module.exports.get_budget_months = function (accToken, budgetID = "default") {
     },
   })
     .then((response) => response.data)
-    .catch((err) => {
-    });
+    .catch((err) => {});
 };
 
 module.exports.get_ynab_category_list = function (
@@ -76,8 +73,7 @@ module.exports.get_ynab_category_list = function (
 module.exports.get_ynab_oauth_token = function (params) {
   return Axios.post("https://app.youneedabudget.com/oauth/token", params)
     .then((response) => response.data)
-    .catch((e) => {
-    });
+    .catch((e) => {});
 };
 
 module.exports.get_authorization_url = function (client_id, redirect_uri) {

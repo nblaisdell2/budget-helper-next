@@ -80,7 +80,7 @@ function SixMonthChart({ sixMonthDetails }) {
           data={chartData()}
           options={options}
           width="100%"
-          height="1600px"
+          height="1000px"
           legendToggle
         />
       </div>

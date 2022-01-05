@@ -6,6 +6,12 @@ const unwantedCategories = [
   "Hidden Categories",
 ];
 
+function treatAsUTC(date) {
+  var result = new Date(date);
+  result.setMinutes(result.getMinutes() + result.getTimezoneOffset());
+  return result;
+}
+
 export default function handler(req, res) {
   let categoryDetails = null;
   let monthDetails = null;
@@ -60,7 +66,11 @@ export default function handler(req, res) {
     })
     .then(() => {
       ynab.get_budget_months(req.query.access_token).then((response) => {
+        console.log("WHAT IS THE REPONSE");
+        console.log(response);
+
         monthDetails = response.data.budget.months;
+
         let newMonthDetails = [];
 
         let today = new Date();
@@ -73,12 +83,15 @@ export default function handler(req, res) {
         for (let i = 0; i < monthDetails.length; i++) {
           if (monthDetails[i].budgeted > 0) {
             let ynMonth = new Date(monthDetails[i].month);
+            ynMonth = treatAsUTC(ynMonth);
 
             if (
               ynMonth.getFullYear() > today.getFullYear() ||
               (ynMonth.getFullYear() == today.getFullYear() &&
-                ynMonth.getMonth() + 1 >= today.getMonth())
+                ynMonth.getMonth() + 1 >= today.getMonth() + 1)
             ) {
+              console.log("   ADDING MONTH!");
+              console.log("   " + monthDetails[i].month);
               newMonthDetails.push(monthDetails[i]);
             }
           }

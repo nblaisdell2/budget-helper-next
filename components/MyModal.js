@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import AutomationModal from "./AutomationModal";
 import CategoryModal from "./CategoryModal";
+import SetupBudgetModal from "./SetupBudgetModal";
 
 const customStyles = {
   content: {
@@ -61,6 +62,15 @@ function MyModal(props) {
               nextAutoRuns={props.nextAutoRuns}
               setNextAutoRuns={props.setNextAutoRuns}
               listItems={props.listItems}
+            />
+          )) ||
+          (props.currModal == "Initialize" && (
+            <SetupBudgetModal
+              closeModal={closeModal}
+              userDetails={props.userDetails}
+              setUserDetails={props.setUserDetails}
+              sixMonthDetails={props.sixMonthDetails}
+              defaultStartAmt={props.defaultStartAmt}
             />
           )))}
     </Modal>
