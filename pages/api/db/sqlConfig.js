@@ -3,37 +3,37 @@ const { default: Results } = require("../../../components/Results");
 var sql = null;
 var sqlConfig = {};
 
-// DEV / LOCALHOST - SQL Server Connection
-// DONT FORGET TO REINSTALL: npm install msnodesqlv8
-sql = require("mssql/msnodesqlv8");
-sqlConfig = {
-  driver: "msnodesqlv8",
-  parseJSON: true,
-  connectionString:
-    "Driver={SQL Server Native Client 11.0};Server=" +
-    process.env.DB_HOST +
-    ";Database=" +
-    process.env.DB_DATABASE +
-    ";Integrated Security=True;Trusted_Connection=yes;",
-};
-
-// // PRODUCTION / AWS - SQL Server Connection
-// // DONT FORGET TO UNINSTALL: npm uninstall msnodesqlv8
-// sql = require("mssql");
+// // DEV / LOCALHOST - SQL Server Connection
+// // DONT FORGET TO REINSTALL: npm install msnodesqlv8
+// sql = require("mssql/msnodesqlv8");
 // sqlConfig = {
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-//   server: process.env.DB_HOST,
-//   pool: {
-//     max: 10,
-//     min: 0,
-//     idleTimeoutMillis: 30000,
-//   },
-//   options: {
-//     trustServerCertificate: true, // change to true for local dev / self-signed certs
-//   },
+//   driver: "msnodesqlv8",
+//   parseJSON: true,
+//   connectionString:
+//     "Driver={SQL Server Native Client 11.0};Server=" +
+//     process.env.DB_HOST +
+//     ";Database=" +
+//     process.env.DB_DATABASE +
+//     ";Integrated Security=True;Trusted_Connection=yes;",
 // };
+
+// PRODUCTION / AWS - SQL Server Connection
+// DONT FORGET TO UNINSTALL: npm uninstall msnodesqlv8
+sql = require("mssql");
+sqlConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  server: process.env.DB_HOST,
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000,
+  },
+  options: {
+    trustServerCertificate: true, // change to true for local dev / self-signed certs
+  },
+};
 
 // This will run a stored procedure and return the results as JSON
 function query(res, spName, params) {
