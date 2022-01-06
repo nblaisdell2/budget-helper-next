@@ -90,30 +90,54 @@ function SetupBudgetModal({
               currAmt = currCat.categoryAmount / currMonthDivisor;
             }
 
-            if (currAmt % 100 > 0) {
+            if (currAmt % 1 > 0) {
               currAmt += 0.01;
             }
 
             catTotalAmt += currAmt;
 
-            monthArr.push({
-              isParent: false,
-              isExpanded: isExpanded,
-              id: currCat.id,
-              divisorChanged: divisorChanged,
-              month:
-                startMonth.toLocaleString("default", { month: "long" }) +
-                " " +
-                startMonth.getFullYear(),
-              numMonthsAhead: "",
-              totalAmount: "$" + currAmt.toFixed(2),
-            });
+            if (!currCat.useCurrentMonth) {
+              monthArr.push({
+                isParent: false,
+                isExpanded: isExpanded,
+                id: currCat.id,
+                divisorChanged: divisorChanged,
+                toggleInclude: currCat.toggleInclude,
+                monthNum: j,
+                month:
+                  startMonth.toLocaleString("default", { month: "long" }) +
+                  " " +
+                  startMonth.getFullYear(),
+                numMonthsAhead: "",
+                totalAmount: "$" + currAmt.toFixed(2),
+              });
+
+              startMonth.setMonth(startMonth.getMonth() + 1);
+            } else {
+              if (monthArr?.length == 0) {
+                monthArr.push({
+                  isParent: false,
+                  isExpanded: isExpanded,
+                  id: currCat.id,
+                  divisorChanged: divisorChanged,
+                  toggleInclude: currCat.toggleInclude,
+                  monthNum: j,
+                  month:
+                    startMonth.toLocaleString("default", { month: "long" }) +
+                    " " +
+                    startMonth.getFullYear(),
+                  numMonthsAhead: "",
+                  totalAmount: "$" + catTotalAmt.toFixed(2),
+                });
+              } else {
+                monthArr[0].totalAmount = "$" + catTotalAmt.toFixed(2);
+                monthArr[0].monthNum = j;
+              }
+            }
 
             if (divisorChanged) {
               divisorChanged = false;
             }
-
-            startMonth.setMonth(startMonth.getMonth() + 1);
           }
         }
 
@@ -251,6 +275,30 @@ function SetupBudgetModal({
               })
               .catch((err) => {
                 console.log("Error from YNAB");
+                console.log(err);
+              });
+          }
+
+          if (
+            monthsToSave[j].toggleInclude &&
+            monthsToSave[j].monthNum >= userDetails.MonthsAheadTarget
+          ) {
+            console.log(
+              "Attempting to update the 'IncludeOnChart' field in database"
+            );
+
+            Axios.post("/api/db/update_category_include", {
+              UserID: userDetails.UserID,
+              BudgetID: userDetails.DefaultBudgetID,
+              CategoryID: monthsToSave[j].id,
+            })
+              .then((response) => {
+                console.log(
+                  "Updated category IncludeOnChart field in database!"
+                );
+              })
+              .catch((err) => {
+                console.log("Error from database!");
                 console.log(err);
               });
           }
