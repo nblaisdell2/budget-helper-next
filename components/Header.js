@@ -1,5 +1,6 @@
 import ynab_config from "../pages/config/ynab_oauth_config.json";
 import { useUser } from "@auth0/nextjs-auth0";
+import Image from "next/image";
 
 function Header(props) {
   const { isLoading, user } = useUser();
@@ -60,8 +61,8 @@ function Header(props) {
   return (
     <header className="flex flex-row justify-between">
       <div className="flex items-center mx-2">
-        <img
-          src="public/evercent_logo.png"
+        <Image
+          src="/evercent_logo.png"
           width={100}
           height={100}
           alt="My Logo"
