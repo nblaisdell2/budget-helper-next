@@ -30,10 +30,11 @@ function AutomationEditModal({
 }) {
   useEffect(() => {
     setDayOfWeek(
-      new Date()
+      new Date(userDetails.NextPaydate)
         .toLocaleDateString("en-US", { weekday: "long" })
         .substring(0, 3)
     );
+    setDayOfMonth(new Date(userDetails.NextPaydate).getDate());
   }, []);
 
   return (
