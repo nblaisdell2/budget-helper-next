@@ -22,7 +22,11 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
     if (!isLoading && Object.keys(userDetails).length > 0) {
       setMonthlyAmount(userDetails.MonthlyAmount);
       setPayFrequency(userDetails.PayFrequency || payFrequency);
-      setNextPaydate(new Date(userDetails.NextPaydate) || nextPaydate);
+      setNextPaydate(
+        (userDetails.NextPaydate
+          ? new Date(userDetails.NextPaydate)
+          : new Date()) || nextPaydate
+      );
     }
   }, [userDetails]);
 

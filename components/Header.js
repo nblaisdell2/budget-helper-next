@@ -63,8 +63,9 @@ function Header(props) {
       <div className="flex items-center mx-2">
         <Image
           src="/evercent_logo.png"
-          width={100}
-          height={100}
+          className=" object-contain"
+          width={120}
+          height={120}
           alt="My Logo"
         />
         <h2 className="ml-4 text-5xl font-extrabold">Budget Helper</h2>
