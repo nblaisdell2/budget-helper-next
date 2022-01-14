@@ -21,7 +21,6 @@ function App() {
   const [ynabTokens, setYnabTokens] = useState({});
   const [sixMonthDetails, setSixMonthDetails] = useState({
     monthsAheadTarget: 6,
-
     targetMetCount: 0,
     categories: [],
   });

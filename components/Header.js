@@ -61,7 +61,7 @@ function Header(props) {
     <header className="flex flex-row justify-between">
       <div className="flex items-center mx-2">
         <img
-          src="http://127.0.0.1:8887/patreon_logo.png"
+          src="public/evercent_logo.png"
           width={100}
           height={100}
           alt="My Logo"
@@ -77,12 +77,9 @@ function Header(props) {
           <a className="hover:underline" href="/YNABTutorial">
             Tutorial
           </a>
-          <a className="hover:underline" href="/Amortization">
-            Mortgage Helper
-          </a>
+          {connectToYNAB}
           {signIn}
           {loggedInAs}
-          {connectToYNAB}
         </div>
       </nav>
     </header>

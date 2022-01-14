@@ -122,173 +122,7 @@ function AutomationEditModal({
             </div>
           )) ||
             (setupType == "Scheduled" && (
-              <div>
-                {/* Day of Week checkboxes (Weekly/Bi-weekly) OR Day of Month dropdown (1-31) (Monthly) */}
-                <div>
-                  {userDetails.PayFrequency &&
-                    (((userDetails.PayFrequency == "Every Week" ||
-                      userDetails.PayFrequency == "Every 2 Weeks") && (
-                      <div>
-                        <div className="flex flex-col mt-7">
-                          <div className="uppercase underline text-lg font-semibold">
-                            Day of the Week
-                          </div>
-                          <div className="flex">
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Sun")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Sun") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Sun
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Mon")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Mon") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Mon
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Tue")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Tue") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Tue
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Wed")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Wed") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Wed
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Thu")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Thu") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Thu
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Fri")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Fri") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Fri
-                              </label>
-                            </div>
-                            <div
-                              className="mr-5"
-                              onClick={() => setDayOfWeek("Sat")}
-                            >
-                              <input
-                                type="radio"
-                                checked={
-                                  (dayOfWeek && dayOfWeek == "Sat") || false
-                                }
-                                onChange={() => {}}
-                              />
-                              <label className="ml-1 hover:cursor-pointer">
-                                Sat
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )) ||
-                      (userDetails.PayFrequency == "Monthly" && (
-                        <div className="flex flex-col mt-7">
-                          <div className="uppercase underline text-lg font-semibold">
-                            Day of Month
-                          </div>
-                          <select
-                            className="border border-black"
-                            value={dayOfMonth}
-                            onChange={(e) => setDayOfMonth(e.target.value)}
-                          >
-                            <option value={1}>1</option>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                            <option value={4}>4</option>
-                            <option value={5}>5</option>
-                            <option value={6}>6</option>
-                            <option value={7}>7</option>
-                            <option value={8}>8</option>
-                            <option value={9}>9</option>
-                            <option value={10}>10</option>
-                            <option value={11}>11</option>
-                            <option value={12}>12</option>
-                            <option value={13}>13</option>
-                            <option value={14}>14</option>
-                            <option value={15}>15</option>
-                            <option value={16}>16</option>
-                            <option value={17}>17</option>
-                            <option value={18}>18</option>
-                            <option value={19}>19</option>
-                            <option value={20}>20</option>
-                            <option value={21}>21</option>
-                            <option value={22}>22</option>
-                            <option value={23}>23</option>
-                            <option value={24}>24</option>
-                            <option value={25}>25</option>
-                            <option value={26}>26</option>
-                            <option value={27}>27</option>
-                            <option value={28}>28</option>
-                            <option value={29}>29</option>
-                            <option value={30}>30</option>
-                            <option value={31}>31</option>
-                          </select>
-                        </div>
-                      )))}
-                </div>
-
+              <div className="flex flex-col items-center">
                 {(dayOfWeek || dayOfMonth) && (
                   <>
                     <div className="uppercase underline text-lg font-semibold mt-7">
@@ -351,8 +185,6 @@ function AutomationEditModal({
               onClick={() => {
                 setScheduleChanged(true);
 
-                //   saveAutomationResults();
-
                 let dtWithTime = new Date(autoDate);
                 let numHours =
                   amPM == "AM" ? parseInt(timeOfDay) : parseInt(timeOfDay) + 12;
@@ -367,64 +199,8 @@ function AutomationEditModal({
                     },
                   ]);
                 } else {
-                  // determine how many days to add/subtract from the "dtWithTime"
-                  // based on the dayOfWeek
-                  if (
-                    userDetails.PayFrequency == "Every Week" ||
-                    userDetails.PayFrequency == "Every 2 Weeks"
-                  ) {
-                    let weekNum = 0;
-                    switch (dayOfWeek) {
-                      case "Sun":
-                        weekNum = 0;
-                        break;
-                      case "Mon":
-                        weekNum = 1;
-                        break;
-                      case "Tue":
-                        weekNum = 2;
-                        break;
-                      case "Wed":
-                        weekNum = 3;
-                        break;
-                      case "Thu":
-                        weekNum = 4;
-                        break;
-                      case "Fri":
-                        weekNum = 5;
-                        break;
-                      case "Sat":
-                        weekNum = 6;
-                        break;
-                      default:
-                        break;
-                    }
-
-                    // TODO: Currently, I'm trying to put the days of the week on the "Upcoming Expenses" section,
-                    //       so I can know which day to choose for their paycheck day, and then I can calculate the
-                    //       rest of the data for the Upcoming Expenses table.
-
-                    let daysToAdd = weekNum - dtWithTime.getDay();
-                    if (daysToAdd < 0) {
-                      daysToAdd += 7;
-                    } else if (daysToAdd == 0 && dtWithTime < new Date()) {
-                      daysToAdd += 7;
-                    }
-
-                    dtWithTime = new Date(
-                      dtWithTime.setDate(dtWithTime.getDate() + daysToAdd)
-                    );
-                  } else if (userDetails.PayFrequency == "Monthly") {
-                    let dtTemp = new Date();
-                    if (dtTemp.getDate() > dayOfMonth) {
-                      dtTemp = new Date(dtTemp.setMonth(dtTemp.getMonth() + 1));
-                      dtTemp = new Date(dtTemp.setDate(dayOfMonth));
-                    } else {
-                      dtTemp = new Date(dtTemp.setDate(dayOfMonth));
-                    }
-                    dtWithTime = dtTemp;
-                    dtWithTime.setHours(numHours, 0, 0, 0);
-                  }
+                  dtWithTime = new Date(userDetails.NextPaydate);
+                  dtWithTime.setHours(numHours, 0, 0, 0);
 
                   let newAutoRunList = [];
                   for (let i = 0; i < 10; i++) {
@@ -453,8 +229,6 @@ function AutomationEditModal({
                     dtWithTime = dtTemp;
                   }
 
-                  // setNextAutoRuns(newAutoRunList);
-                  console.log("SETTING TEMP LIST!!!!!");
                   setTempAutoRuns(newAutoRunList);
                 }
 

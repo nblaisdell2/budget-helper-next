@@ -1,5 +1,6 @@
 import axios from "axios";
 import Axios from "axios";
+import Router from "next/router";
 import { useEffect, useState } from "react";
 import SetupBudgetListItem from "./SetupBudgetListItem";
 import { useUser } from "@auth0/nextjs-auth0";
@@ -305,6 +306,8 @@ function SetupBudgetModal({
         }
       }
     }
+
+    Router.reload(window.location.pathname);
   };
 
   const getNewTokens = (refToken) => {

@@ -5,6 +5,7 @@ import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
 import { Chart } from "react-google-charts";
 import { getCategoryAmountModified } from "../utils.js";
+import DateTimePicker from "./DateTimePicker.js";
 
 function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const { user, isLoading } = useUser();
@@ -15,11 +16,13 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const [monthlyAmount, setMonthlyAmount] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   const [payFrequency, setPayFrequency] = useState("Every 2 Weeks");
+  const [nextPaydate, setNextPaydate] = useState(new Date());
 
   useEffect(() => {
     if (!isLoading && Object.keys(userDetails).length > 0) {
       setMonthlyAmount(userDetails.MonthlyAmount);
       setPayFrequency(userDetails.PayFrequency || payFrequency);
+      setNextPaydate(new Date(userDetails.NextPaydate) || nextPaydate);
     }
   }, [userDetails]);
 
@@ -126,12 +129,14 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const updatePayFrequency = () => {
     let newUserDetails = { ...userDetails };
     newUserDetails.PayFrequency = payFrequency;
+    newUserDetails.NextPaydate = nextPaydate.toISOString();
     setUserDetails(newUserDetails);
 
     if (user) {
       Axios.post("/api/db/update_pay_frequency", {
         UserID: userDetails.UserID,
         PayFrequency: payFrequency,
+        NextPaydate: nextPaydate,
       })
         .then((response) => {
           console.log(
@@ -158,175 +163,187 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
 
   console.log("pay frequency");
   console.log(payFrequency);
+  console.log("next paydate");
+  console.log(nextPaydate);
 
   if (isLoading) {
     return <div></div>;
+  }
+
+  if (editingFrequency) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex items-center">
+          <div className="text-center">
+            <div className="uppercase underline text-lg font-semibold">
+              Pay Frequency
+            </div>
+            <div className="flex flex-col mt-1">
+              <div className="flex">
+                <div
+                  className="mr-5"
+                  onClick={() => setPayFrequency("Every Week")}
+                >
+                  <input
+                    type="radio"
+                    checked={
+                      (payFrequency && payFrequency == "Every Week") || false
+                    }
+                    onChange={() => {}}
+                  />
+                  <label className="ml-1 hover:cursor-pointer">
+                    Every Week
+                  </label>
+                </div>
+                <div
+                  className="mr-5"
+                  onClick={() => setPayFrequency("Every 2 Weeks")}
+                >
+                  <input
+                    type="radio"
+                    checked={
+                      (payFrequency && payFrequency == "Every 2 Weeks") || false
+                    }
+                    onChange={() => {}}
+                  />
+                  <label className="ml-1 hover:cursor-pointer">
+                    Every 2 Weeks
+                  </label>
+                </div>
+                <div
+                  className="mr-5"
+                  onClick={() => setPayFrequency("Monthly")}
+                >
+                  <input
+                    type="radio"
+                    checked={
+                      (payFrequency && payFrequency == "Monthly") || false
+                    }
+                    onChange={() => {}}
+                  />
+                  <label className="ml-1 hover:cursor-pointer">Monthly</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center ml-5">
+            <div className="uppercase underline text-lg font-semibold">
+              Next Paydate
+            </div>
+            <div>
+              <DateTimePicker
+                autoDate={nextPaydate}
+                setAutoDate={setNextPaydate}
+              />
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="font-bold p-3 ml-5 mt-8 w-32 rounded-md hover:underline bg-gray-300 hover:bg-blue-300 hover:text-white"
+          onClick={() => {
+            updatePayFrequency();
+          }}
+        >
+          Save
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col justify-between items-stretch">
       {/* Amounts Section */}
       <div className="flex justify-between">
-        <div
-          className={`flex w-full ${
-            editingFrequency ? "justify-center" : "justify-evenly"
-          }`}
-        >
+        <div className={`flex w-full items-center justify-evenly`}>
           <div className="text-center">
             <div className="font-semibold text-lg">PAY FREQUENCY</div>
             <div className="flex items-center">
-              {editingFrequency ? (
-                <div className="flex flex-col mt-1">
-                  <div className="flex">
-                    <div
-                      className="mr-5"
-                      onClick={() => setPayFrequency("Every Week")}
-                    >
-                      <input
-                        type="radio"
-                        checked={
-                          (payFrequency && payFrequency == "Every Week") ||
-                          false
-                        }
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Every Week
-                      </label>
-                    </div>
-                    <div
-                      className="mr-5"
-                      onClick={() => setPayFrequency("Every 2 Weeks")}
-                    >
-                      <input
-                        type="radio"
-                        checked={
-                          (payFrequency && payFrequency == "Every 2 Weeks") ||
-                          false
-                        }
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Every 2 Weeks
-                      </label>
-                    </div>
-                    <div
-                      className="mr-5"
-                      onClick={() => setPayFrequency("Monthly")}
-                    >
-                      <input
-                        type="radio"
-                        checked={
-                          (payFrequency && payFrequency == "Monthly") || false
-                        }
-                        onChange={() => {}}
-                      />
-                      <label className="ml-1 hover:cursor-pointer">
-                        Monthly
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="font-bold text-2xl">{payFrequency}</div>
-                  <PencilAltIcon
-                    className="h-7 ml-1 cursor-pointer hover:text-gray-400"
-                    onClick={() => setEditingFrequency(true)}
-                  />
-                </>
-              )}
+              <div className="font-bold text-2xl">{payFrequency}</div>
+              <PencilAltIcon
+                className="h-7 ml-1 cursor-pointer hover:text-gray-400"
+                onClick={() => setEditingFrequency(true)}
+              />
             </div>
           </div>
-          {editingFrequency && (
-            <button
-              type="button"
-              className="font-bold p-3 ml-5 mt-2 w-32 rounded-md hover:underline bg-gray-300 hover:bg-blue-300 hover:text-white"
-              onClick={() => {
-                updatePayFrequency();
-              }}
-            >
-              Save
-            </button>
-          )}
 
-          {!editingFrequency && (
-            <>
-              <div className="flex flex-col items-center">
-                <div className="font-semibold text-lg">MONTHLY INCOME</div>
-                <div className="flex justify-center items-center">
-                  {editingMonthlyAmount ? (
-                    <>
-                      <input
-                        className="text-right p-2 border border-black rounded-md"
-                        type="numeric"
-                        value={monthlyAmount}
-                        onChange={(e) => {
-                          setMonthlyAmount(
-                            e.target.value == "" ? 0 : parseInt(e.target.value)
-                          );
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            updateMontlyIncome();
-                          }
-                        }}
-                        onClick={(e) => e.target.select()}
-                      />
-                      <CheckIcon
-                        className="h-8 cursor-pointer ml-1 hover:text-green-600"
-                        onClick={() => {
+          <>
+            <div className="flex flex-col items-center">
+              <div className="font-semibold text-lg">MONTHLY INCOME</div>
+              <div className="flex justify-center items-center">
+                {editingMonthlyAmount ? (
+                  <>
+                    <input
+                      className="text-right p-2 border border-black rounded-md"
+                      type="numeric"
+                      value={monthlyAmount}
+                      onChange={(e) => {
+                        setMonthlyAmount(
+                          e.target.value == "" ? 0 : parseInt(e.target.value)
+                        );
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
                           updateMontlyIncome();
-                        }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <div className="font-bold text-3xl text-green-600">
-                        {"$" + monthlyAmount}
-                      </div>
-                      <PencilAltIcon
-                        className="h-7 ml-1 cursor-pointer hover:text-green-600"
-                        onClick={() => setEditingMonthlyAmount(true)}
-                      />
-                    </>
-                  )}
-                </div>
+                        }
+                      }}
+                      onClick={(e) => e.target.select()}
+                    />
+                    <CheckIcon
+                      className="h-8 cursor-pointer ml-1 hover:text-green-600"
+                      onClick={() => {
+                        updateMontlyIncome();
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="font-bold text-3xl text-green-600">
+                      {"$" + monthlyAmount}
+                    </div>
+                    <PencilAltIcon
+                      className="h-7 ml-1 cursor-pointer hover:text-green-600"
+                      onClick={() => setEditingMonthlyAmount(true)}
+                    />
+                  </>
+                )}
               </div>
-              <div className="text-center">
-                <div className="font-semibold text-lg">AMOUNT REMAINING</div>
-                <div
-                  className={`font-bold text-3xl ${
-                    parseInt((monthlyAmount - grandTotal).toFixed(0)) < 0 &&
-                    "text-red-500"
-                  }`}
-                >
-                  {"$" + (monthlyAmount - grandTotal).toFixed(0)}
-                </div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-lg">AMOUNT REMAINING</div>
+              <div
+                className={`font-bold text-3xl ${
+                  parseInt((monthlyAmount - grandTotal).toFixed(0)) < 0 &&
+                  "text-red-500"
+                }`}
+              >
+                {"$" + (monthlyAmount - grandTotal).toFixed(0)}
               </div>
-              <div className="text-center">
-                <div className="font-semibold text-lg">AMOUNT USED</div>
-                <div className="font-bold text-3xl">
-                  {"$" + grandTotal.toFixed(0)}
-                </div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-lg">AMOUNT USED</div>
+              <div className="font-bold text-3xl">
+                {"$" + grandTotal.toFixed(0)}
               </div>
-              <div className="text-center">
-                <div className="font-semibold text-lg">% USED</div>
-                <div className="font-bold text-3xl">
-                  {(monthlyAmount == 0
-                    ? 0
-                    : (grandTotal / monthlyAmount) * 100
-                  ).toFixed(0) == "100" &&
-                  parseInt((monthlyAmount - grandTotal).toFixed(0)) > 0
-                    ? "99"
-                    : (monthlyAmount == 0
-                        ? 0
-                        : (grandTotal / monthlyAmount) * 100
-                      ).toFixed(0) + "%"}
-                </div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-lg">% USED</div>
+              <div className="font-bold text-3xl">
+                {(monthlyAmount == 0
+                  ? 0
+                  : (grandTotal / monthlyAmount) * 100
+                ).toFixed(0) == "100" &&
+                parseInt((monthlyAmount - grandTotal).toFixed(0)) > 0
+                  ? "99"
+                  : (monthlyAmount == 0
+                      ? 0
+                      : (grandTotal / monthlyAmount) * 100
+                    ).toFixed(0) + "%"}
               </div>
-            </>
-          )}
+            </div>
+          </>
         </div>
       </div>
 
