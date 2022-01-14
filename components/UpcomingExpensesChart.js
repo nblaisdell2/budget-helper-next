@@ -31,7 +31,7 @@ function UpcomingExpensesChart({
             {getShortDate(new Date(userDetails.NextPaydate)) +
               " (" +
               Math.ceil(
-                daysBetween(new Date(), new Date(userDetails.NextPaydate))
+                daysBetween(new Date(), new Date(userDetails.NextPaydate)) - 1
               ) +
               " days away)"}
           </div>
