@@ -201,6 +201,7 @@ function AutomationEditModal({
                 } else {
                   dtWithTime = new Date(userDetails.NextPaydate);
                   dtWithTime.setHours(numHours, 0, 0, 0);
+                  setAutoDate(dtWithTime);
 
                   let newAutoRunList = [];
                   for (let i = 0; i < 10; i++) {
