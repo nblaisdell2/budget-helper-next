@@ -21,6 +21,7 @@ function ChartInfo({
   setDayOfMonth,
   upcoming,
   setUpcoming,
+  setUpcomingExpensesInfo,
 }) {
   const renderChartInfo = (type) => {
     switch (type) {
@@ -58,6 +59,7 @@ function ChartInfo({
             setDayOfMonth={setDayOfMonth}
             upcoming={upcoming}
             setUpcoming={setUpcoming}
+            setUpcomingExpensesInfo={setUpcomingExpensesInfo}
           />
         );
       default:

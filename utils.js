@@ -212,9 +212,6 @@ export function calculateUpcomingExpensesForCategory(
     dtWithTime = dtTemp;
   } while (totalPurchaseAmt > 0);
 
-  console.log("Auto run list for paying off expense");
-  console.log(newAutoRunList);
-
   let dtPurchaseDate = new Date(
     newAutoRunList[newAutoRunList.length - 1].RunTime
   );
@@ -227,16 +224,16 @@ export function calculateUpcomingExpensesForCategory(
     ItemName: cat.name,
     ItemAmount:
       "$" +
-      ynabLatestBalance.toFixed(0) +
+      ynabLatestBalance?.toFixed(0) +
       " / $" +
-      cat.upcomingExpense.toFixed(0),
+      cat.upcomingExpense?.toFixed(0),
     ItemDate: getShortDate(
       new Date(newAutoRunList[newAutoRunList.length - 1].RunTime)
     ),
     // ItemDate: new Date(
     //   newAutoRunList[newAutoRunList.length - 1].RunTime
     // ).toLocaleDateString("en-US"),
-    NumDays: Math.ceil(numDaysToPurchase).toFixed(0),
+    NumDays: Math.ceil(numDaysToPurchase)?.toFixed(0),
     NumPaychecks: numPaychecks,
   };
 }

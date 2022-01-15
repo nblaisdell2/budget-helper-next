@@ -6,6 +6,7 @@ import {
   calculateUpcomingExpensesForCategory,
   getAllCategories,
 } from "../utils";
+import SetupBudgetListItem from "./SetupBudgetListItem";
 
 function Results({
   name,
@@ -89,6 +90,7 @@ function Results({
           setDayOfMonth={setDayOfMonth}
           upcoming={upcoming}
           setUpcoming={setUpcoming}
+          setUpcomingExpensesInfo={setUpcomingExpensesInfo}
         />
       </div>
     </div>

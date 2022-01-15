@@ -31,8 +31,6 @@ function App() {
 
   const saveSessionResultsInDB = (userDetails) => {
     if (Object.keys(userDetails).length > 0) {
-      console.log("Saving session results to database, maybe!");
-
       // Setting monthly amount for new user from previous session
       let sess_monthlyAmt = sessionStorage.getItem("monthlyAmount");
       if (sess_monthlyAmt) {
@@ -48,8 +46,6 @@ function App() {
 
       // Setting paycheck frequency for new user from previous session
       let sess_payFrequency = sessionStorage.getItem("payFrequency");
-      console.log("Did we get a pay frequency?");
-      console.log(sess_payFrequency);
 
       if (sess_payFrequency) {
         userDetails.PayFrequency = sess_payFrequency;
@@ -154,14 +150,9 @@ function App() {
         },
       })
         .then((response) => {
-          console.log("user details from database");
-          console.log(response);
           if (response.data[0].length === 0) {
             addUser();
           } else {
-            console.log("What is the new user id?");
-            console.log(newUserID);
-
             // If a NEW user logs in, if there were any results saved from the previous session, let's save
             // the results to the database so they don't have to start over.
             let newUserDetails = { ...response.data[0][0] };
