@@ -22,20 +22,38 @@ function UpcomingExpensesInfo({
   if (upExpenseInd && Object.keys(upExpenseInd).length == 0) {
     console.log("at least I've got this");
     console.log(upcoming);
-    return (
-      <div>
-        <div>Upcoming Expenses Overall</div>
-        <div>
-          <div>Saving up for x Items/Categories</div>
+    if (upcoming.length > 0) {
+      return (
+        <div className="flex justify-center mt-20 text-2xl">
+          <div>Select an Item/Category on the left to get more details</div>
         </div>
-        <div>
-          <div>Next Upcoming Expense</div>
+      );
+    } else {
+      return (
+        <div className="flex flex-col h-full items-center justify-center">
+          <div className="text-2xl mb-10">
+            You have no categories marked as an <b>Upcoming Expense</b>!
+          </div>
+          <div className="w-full mb-10">
+            <div>On the Budget Helper tab...</div>
+            <ul className="list-disc list-inside ml-5">
+              <li>Select a Category</li>
+              <li>Choose "Upcoming Expense" from the Options section</li>
+              <li>
+                Then, enter the "Total Expense Amount", or the price of the
+                entire expense.
+              </li>
+            </ul>
+          </div>
+
+          <div className="text-center">
+            For every category marked as an "Upcoming Expense", you can come
+            back here and see how long it will take to be able to purchase that
+            expense!
+          </div>
         </div>
-        <div>
-          <div>Last Upcoming Expense</div>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 
   console.log("individual");

@@ -15,10 +15,10 @@ import {
 
 function App() {
   const [userDetails, setUserDetails] = useState({});
+  const [ynabTokens, setYnabTokens] = useState({});
   const [nextAutoRuns, setNextAutoRuns] = useState([]);
   const [userCategories, setUserCategories] = useState({});
   const [userCategoryList, setUserCategoryList] = useState([]);
-  const [ynabTokens, setYnabTokens] = useState({});
   const [sixMonthDetails, setSixMonthDetails] = useState({
     monthsAheadTarget: 6,
     targetMetCount: 0,

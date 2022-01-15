@@ -21,16 +21,10 @@ function Results({
   nextAutoRuns,
   setNextAutoRuns,
 }) {
-  const { isLoading } = useUser();
-
   const [dayOfWeek, setDayOfWeek] = useState("Thu");
   const [dayOfMonth, setDayOfMonth] = useState(1);
   const [upcoming, setUpcoming] = useState([]);
   const [upExpenseInd, setUpExpenseInd] = useState({});
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   const setUpcomingExpensesInfo = (upcomingExpense) => {
     setUpExpenseInd(upcomingExpense);
@@ -44,15 +38,15 @@ function Results({
           x.categoryGroupID == upExpenseInd.ItemGroupID
       );
 
-      setUpExpenseInd(
-        calculateUpcomingExpensesForCategory(
-          catDetails,
-          dayOfWeek,
-          dayOfMonth,
-          userDetails.PayFrequency,
-          0
-        )
+      let expenseDetails = calculateUpcomingExpensesForCategory(
+        catDetails,
+        dayOfWeek,
+        dayOfMonth,
+        userDetails.PayFrequency,
+        0
       );
+
+      setUpExpenseInd(expenseDetails);
     }
   }, [dayOfWeek, dayOfMonth]);
 

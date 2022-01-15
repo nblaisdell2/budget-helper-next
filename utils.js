@@ -40,10 +40,6 @@ export function setMonthDetails(monthDetails) {
 
 export function getLatestBalance(catID) {
   if (mthDetails && mthDetails.length > 0) {
-    console.log("catid?");
-    console.log(catID);
-    console.log(mthDetails);
-
     let ynabCat = mthDetails[0]?.categories.find((x) => x.id == catID);
     return ynabCat["balance"] == 0 ? 0 : ynabCat["balance"] / 1000;
   }
@@ -132,8 +128,6 @@ export function calculateUpcomingExpensesForCategory(
   extraAmt = 0
 ) {
   let ynabLatestBalance = getLatestBalance(cat.id);
-  console.log("YNAB - Latest balance for " + cat.name);
-  console.log(ynabLatestBalance);
 
   let dtWithTime = new Date();
   dtWithTime.setHours(0, 0, 0, 0);
@@ -271,15 +265,9 @@ export function calculateUpcomingExpenses(
     );
   }
 
-  console.log("upcoming expenses - BEFORE?");
-  console.log(upcomingTemp);
-
   upcomingTemp.sort((a, b) =>
     parseInt(a.NumDays) > parseInt(b.NumDays) ? 1 : -1
   );
-
-  console.log("upcoming expenses - sorted?");
-  console.log(upcomingTemp);
 
   return upcomingTemp;
 }

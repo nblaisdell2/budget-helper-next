@@ -19,6 +19,20 @@ function UpcomingExpensesChart({
   upcoming,
   setUpcoming,
 }) {
+  useEffect(() => {
+    let dayOfWeek = new Date(userDetails.NextPaydate)
+      .toLocaleDateString("en-US", { weekday: "long" })
+      .substring(0, 3);
+    let dayOfMonth = new Date(userDetails.NextPaydate).getDate();
+    let newUpcomingExpenses = calculateUpcomingExpenses(
+      userCategoryList,
+      dayOfWeek,
+      dayOfMonth,
+      userDetails.PayFrequency
+    );
+    setUpcoming(newUpcomingExpenses);
+  }, [dayOfWeek, dayOfMonth]);
+
   return (
     <div>
       <div className="flex justify-evenly">
