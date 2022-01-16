@@ -3,11 +3,13 @@ export function getCategoryAmountModified(cat) {
     return 0;
   }
 
-  let newAmt = cat.categoryAmount + (cat.extraAmount || 0);
+  let newAmt = cat.categoryAmount;
 
   if (cat.expenseType && cat.expenseType == "By Date") {
     newAmt /= cat.expenseMonthsDivisor;
   }
+
+  newAmt += cat.extraAmount || 0;
 
   return newAmt;
 }
