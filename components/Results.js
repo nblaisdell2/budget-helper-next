@@ -62,6 +62,7 @@ function Results({
           userDetails={userDetails}
           setUserDetails={setUserDetails}
           userCategoryList={userCategoryList}
+          setUserCategoryList={setUserCategoryList}
           setUpcomingExpensesInfo={setUpcomingExpensesInfo}
           upExpenseInd={upExpenseInd}
           dayOfWeek={dayOfWeek}

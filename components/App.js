@@ -355,6 +355,7 @@ function App() {
                     id: currGroup.id,
                     name: currGroup.name,
                     isExpanded: false,
+                    isSelected: false,
                     categories: [],
                   };
                   for (let j = 0; j < currGroup.categories.length; j++) {

@@ -150,14 +150,18 @@ function BudgetChartInfo({
       }
 
       if (currItemList.length > 0) {
-        let expanded = userCategoryList.find(
-          (x) => x.id == newCategories.category_groups[i].id
-        )?.isExpanded;
+        // let expanded = userCategoryList.find(
+        //   (x) => x.id == newCategories.category_groups[i].id
+        // )?.isExpanded;
 
+        let cat = userCategoryList.find(
+          (x) => x.id == newCategories.category_groups[i].id
+        );
         userList.push({
           id: newCategories.category_groups[i].id,
           name: newCategories.category_groups[i].name,
-          isExpanded: expanded,
+          isExpanded: cat?.isExpanded,
+          isSelected: cat?.isSelected,
           categories: currItemList,
         });
       }

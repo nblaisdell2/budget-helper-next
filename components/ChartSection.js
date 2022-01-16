@@ -10,6 +10,7 @@ function ChartSection({
   userDetails,
   setUserDetails,
   userCategoryList,
+  setUserCategoryList,
   setUpcomingExpensesInfo,
   upExpenseInd,
   dayOfWeek,
@@ -29,6 +30,7 @@ function ChartSection({
             userDetails={userDetails}
             setUserDetails={setUserDetails}
             userCategoryList={userCategoryList}
+            setUserCategoryList={setUserCategoryList}
           />
         );
       case "Six Month Details":

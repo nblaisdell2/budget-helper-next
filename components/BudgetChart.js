@@ -3,11 +3,16 @@ import CheckIcon from "@heroicons/react/outline/CheckIcon";
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
-import { Chart } from "react-google-charts";
+import { ReactGoogleChartEvent, Chart } from "react-google-charts";
 import { getCategoryAmountModified } from "../utils.js";
 import DateTimePicker from "./DateTimePicker.js";
 
-function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
+function BudgetChart({
+  userDetails,
+  setUserDetails,
+  userCategoryList,
+  setUserCategoryList,
+}) {
   const { user, isLoading } = useUser();
 
   const [editingMonthlyAmount, setEditingMonthlyAmount] = useState(false);
@@ -17,6 +22,8 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   const [grandTotal, setGrandTotal] = useState(0);
   const [payFrequency, setPayFrequency] = useState("Every 2 Weeks");
   const [nextPaydate, setNextPaydate] = useState(new Date());
+
+  const [currSelectedColumn, setCurrSelectedColumn] = useState(null);
 
   useEffect(() => {
     if (!isLoading && Object.keys(userDetails).length > 0) {
@@ -49,25 +56,93 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
     }
   }, [userCategoryList]);
 
+  // useEffect(() => {
+  //   if (monthlyAmount > 5000) {
+  //     let newList = [...userCategoryList];
+  //     for (let i = 0; i < newList.length; i++) {
+  //       if (newList[i].name == "Just for Fun") {
+  //         newList[i].isSelected = true;
+  //       } else {
+  //         newList[i].isSelected = false;
+  //       }
+  //     }
+  //     setUserCategoryList(newList);
+  //   } else {
+  //     let newList = [...userCategoryList];
+  //     for (let i = 0; i < newList.length; i++) {
+  //       newList[i].isSelected = false;
+  //     }
+  //     setUserCategoryList(newList);
+  //   }
+  // }, [monthlyAmount]);
+
+  const chartEvents = [
+    {
+      eventName: "select",
+      callback: ({ chartWrapper }) => {
+        const chart = chartWrapper.getChart();
+        const selection = chart.getSelection();
+        if (selection.length === 1) {
+          const [selectedItem] = selection;
+          const dataTable = chartWrapper.getDataTable();
+          const { row, column } = selectedItem;
+
+          const colName = dataTable?.getColumnLabel(column);
+
+          let newList = [...userCategoryList];
+          for (let i = 0; i < newList.length; i++) {
+            if (currSelectedColumn !== null && currSelectedColumn == colName) {
+              newList[i].isSelected = false;
+              setCurrSelectedColumn(null);
+            } else {
+              if (newList[i].name == colName) {
+                newList[i].isSelected = true;
+              } else {
+                newList[i].isSelected = false;
+              }
+              setCurrSelectedColumn(colName);
+            }
+          }
+          setUserCategoryList(newList);
+        }
+      },
+    },
+  ];
+
   const options = {
     title: "By Category Group",
     isStacked: true,
     legend: "none",
     backgroundColor: "transparent",
     hAxis: { textPosition: "none", gridlines: { count: 0 } },
+    animation: {
+      startup: false,
+      easing: "out",
+      duration: 2000,
+    },
   };
   const optionsInd = {
-    title: "By Category",
+    title:
+      "By Category" +
+      (currSelectedColumn == null ? "" : " (" + currSelectedColumn + ")"),
     isStacked: true,
     legend: "none",
     backgroundColor: "transparent",
     hAxis: { textPosition: "none", gridlines: { count: 0 } },
+    animation: {
+      startup: false,
+      easing: "inAndOut",
+      duration: 1000,
+    },
   };
 
   const chartDataGroup = () => {
     let data = [];
     let rowCols = ["Grouping"];
     let rowData = [""];
+
+    console.log("user list");
+    console.log(userCategoryList);
 
     for (let i = 0; i < userCategoryList.length; i++) {
       rowCols.push(userCategoryList[i].name);
@@ -93,19 +168,24 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
     let rowCols = ["Grouping"];
     let rowData = [""];
 
+    let anySelected =
+      userCategoryList.filter((x) => x.name == currSelectedColumn).length > 0;
     for (let i = 0; i < userCategoryList.length; i++) {
-      for (let j = 0; j < userCategoryList[i].categories.length; j++) {
-        rowCols.push(userCategoryList[i].categories[j].name);
-        let catAmt = getCategoryAmountModified(
-          userCategoryList[i].categories[j]
-        );
-        rowData.push(catAmt);
+      if (!anySelected || userCategoryList[i].name == currSelectedColumn) {
+        for (let j = 0; j < userCategoryList[i].categories.length; j++) {
+          rowCols.push(userCategoryList[i].categories[j].name);
+          let catAmt = getCategoryAmountModified(
+            userCategoryList[i].categories[j]
+          );
+          rowData.push(catAmt);
+        }
       }
     }
 
-    rowCols.push("Unused");
-    rowData.push(monthlyAmount - grandTotal);
-
+    if (!anySelected) {
+      rowCols.push("Unused");
+      rowData.push(monthlyAmount - grandTotal);
+    }
     data.push(rowCols, rowData);
 
     return data;
@@ -366,6 +446,7 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
               width="100%"
               height="300px"
               legendToggle
+              chartEvents={chartEvents}
             />
             <Chart
               className="-mt-10"
