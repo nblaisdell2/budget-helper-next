@@ -252,7 +252,7 @@ function BudgetChart({
   console.log("next paydate");
   console.log(nextPaydate);
 
-  if (isLoading) {
+  if (isLoading || userCategoryList.length == 0) {
     return <div></div>;
   }
 
