@@ -84,6 +84,7 @@ function BudgetChartInfo({
             currItemList.push({
               ...newCategories.category_groups[i].categories[j],
               categoryAmount: existingCat.categoryAmount,
+              extraAmount: existingCat.extraAmount,
               expenseType: existingCat.expenseType,
               includeOnChart: existingCat.includeOnChart,
               upcomingExpense: existingCat.upcomingExpense,
@@ -113,6 +114,7 @@ function BudgetChartInfo({
               currItemList.push({
                 ...newCategories.category_groups[i].categories[j],
                 categoryAmount: rem.categoryAmount,
+                extraAmount: rem.extraAmount,
                 expenseType: rem.expenseType,
                 includeOnChart: rem.includeOnChart,
                 upcomingExpense: rem.upcomingExpense,
@@ -129,6 +131,7 @@ function BudgetChartInfo({
               currItemList.push({
                 ...newCategories.category_groups[i].categories[j],
                 categoryAmount: 0,
+                extraAmount: 0,
                 expenseType: null,
                 includeOnChart: null,
                 upcomingExpense: null,

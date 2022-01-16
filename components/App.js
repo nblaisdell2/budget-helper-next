@@ -370,6 +370,7 @@ function App() {
                         categoryGroupID: foundCat.categoryGroupID,
                         name: foundCat.name,
                         categoryAmount: catGroup.CategoryAmount,
+                        extraAmount: catGroup.ExtraAmount,
                         expenseType: catGroup.ExpenseType,
                         includeOnChart: catGroup.IncludeOnChart,
                         upcomingExpense: catGroup.UpcomingExpense,

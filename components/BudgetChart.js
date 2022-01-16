@@ -31,7 +31,9 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
   }, [userDetails]);
 
   useEffect(() => {
+    console.log("Am i getting new amounts?");
     if (userCategoryList.length > 0) {
+      console.log("getting new amounts");
       let newGrandTotal = 0;
       for (let i = 0; i < userCategoryList.length; i++) {
         for (let j = 0; j < userCategoryList[i].categories.length; j++) {
@@ -323,7 +325,7 @@ function BudgetChart({ userDetails, setUserDetails, userCategoryList }) {
                   "text-red-500"
                 }`}
               >
-                {"$" + (monthlyAmount - grandTotal).toFixed(0)}
+                {"$" + parseInt((monthlyAmount - grandTotal).toFixed(0))}
               </div>
             </div>
             <div className="text-center">

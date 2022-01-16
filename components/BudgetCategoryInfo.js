@@ -45,7 +45,10 @@ function BudgetCategoryInfo({
   }, [autoDate]);
 
   let amountPercent =
-    monthlyAmount == 0 ? 0 : (category.categoryAmount / monthlyAmount) * 100;
+    monthlyAmount == 0
+      ? 0
+      : ((category.categoryAmount + category.extraAmount) / monthlyAmount) *
+        100;
   return (
     <div>
       <div className="flex justify-between">
@@ -62,7 +65,7 @@ function BudgetCategoryInfo({
       </div>
 
       <div className="h-[500px] overflow-y-auto">
-        <div className="flex justify-evenly rounded-2xl border border-gray-500 bg-gray-200 p-1">
+        <div className="flex justify-evenly rounded-2xl border border-gray-500 bg-gray-200 p-1 items-center">
           {/* Category Amount (direct) */}
           <div className="flex flex-col justify-between p-2 pt-1">
             <div className="text-center font">Amount</div>
@@ -84,10 +87,30 @@ function BudgetCategoryInfo({
                 onClick={(e) => e.target.select()}
               />
             </div>
+
+            <div className="text-center font">Extra Amount</div>
+
+            <div className="flex-grow">
+              <input
+                className="text-right p-2 border border-black rounded-md"
+                type="numeric"
+                value={category.extraAmount}
+                onChange={(e) => {
+                  // if (tryParseInt(e.target.value)) {
+                  let newCat = getNewCategory(
+                    "extraAmount",
+                    e.target.value == "" ? 0 : parseInt(e.target.value)
+                  );
+                  setCategory(newCat);
+                  // }
+                }}
+                onClick={(e) => e.target.select()}
+              />
+            </div>
           </div>
 
           {/* Monthly Income % (slider) */}
-          <div className="flex-grow p-2 pt-1 text-center">
+          <div className="flex-grow p-2 pt-1 text-center items-center">
             <div>% of Monthly Income</div>
 
             <div>
