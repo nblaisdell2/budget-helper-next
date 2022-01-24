@@ -1,6 +1,8 @@
 import { Chart } from "react-google-charts";
 
 function SixMonthChart({ sixMonthDetails }) {
+  console.log(sixMonthDetails);
+
   const options = {
     title: "",
     fontSize: 14,
@@ -74,15 +76,25 @@ function SixMonthChart({ sixMonthDetails }) {
       <div className="text-center font-bold  text-2xl mb-3">
         Regular Expenses
       </div>
+
       <div className="h-[550px] overflow-y-auto">
-        <Chart
-          chartType="BarChart"
-          data={chartData()}
-          options={options}
-          width="100%"
-          height="1000px"
-          legendToggle
-        />
+        {sixMonthDetails.categories.length == 0 ? (
+          <div>
+            <div className="text-center">
+              Mark some Categories as a "Regular Expense" to track your progress
+              on each of those categories.
+            </div>
+          </div>
+        ) : (
+          <Chart
+            chartType="BarChart"
+            data={chartData()}
+            options={options}
+            width="100%"
+            height="1000px"
+            legendToggle
+          />
+        )}
       </div>
     </>
   );

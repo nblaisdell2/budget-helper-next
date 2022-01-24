@@ -7,7 +7,14 @@ module.exports = {
   ],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        raleway: ['"Raleway"', "sans-serif"],
+        arima: ["Arima Madurai", "cursive"],
+        anonymous: ["Anonymous Pro", "monospace"],
+        cinzel: ["Cinzel", "serif"],
+      },
+    },
   },
   variants: {
     extend: {

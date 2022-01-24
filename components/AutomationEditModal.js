@@ -196,7 +196,7 @@ function AutomationEditModal({
                   setTempAutoRuns([
                     {
                       RunTime: dtWithTime.toISOString(),
-                      Frequency: setupType,
+                      Frequency: userDetails.PayFrequency,
                     },
                   ]);
                 } else {

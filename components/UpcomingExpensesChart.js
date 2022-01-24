@@ -33,6 +33,14 @@ function UpcomingExpensesChart({
     setUpcoming(newUpcomingExpenses);
   }, [dayOfWeek, dayOfMonth]);
 
+  let dtNext = userDetails.NextPaydate
+    ? new Date(userDetails.NextPaydate)
+    : new Date();
+  let daysBetweenNext = Math.ceil(daysBetween(new Date(), dtNext) - 1);
+  if (daysBetweenNext < 0) {
+    daysBetweenNext = 0;
+  }
+
   return (
     <div>
       <div className="flex justify-evenly">
@@ -42,12 +50,7 @@ function UpcomingExpensesChart({
         <div className="text-center">
           <div className="underline font-bold">Next Paydate</div>
           <div className=" text-lg">
-            {getShortDate(new Date(userDetails.NextPaydate)) +
-              " (" +
-              Math.ceil(
-                daysBetween(new Date(), new Date(userDetails.NextPaydate)) - 1
-              ) +
-              " days away)"}
+            {getShortDate(dtNext) + " (" + daysBetweenNext + " days away)"}
           </div>
         </div>
       </div>

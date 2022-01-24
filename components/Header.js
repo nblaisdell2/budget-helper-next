@@ -68,13 +68,13 @@ function Header(props) {
           height={120}
           alt="My Logo"
         />
-        <h2 className="ml-4 text-5xl font-extrabold">Budget Helper</h2>
+        <h2 className="ml-4 text-5xl font-cinzel">EverCent</h2>
       </div>
 
       <nav className="flex">
         <div className="flex items-center space-x-10">
           <a className="hover:underline" href="/">
-            Budget Helper
+            Home
           </a>
           <a className="hover:underline" href="/YNABTutorial">
             Tutorial

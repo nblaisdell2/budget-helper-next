@@ -252,7 +252,7 @@ function BudgetChart({
   console.log("next paydate");
   console.log(nextPaydate);
 
-  if (isLoading || userCategoryList.length == 0) {
+  if (isLoading) {
     return <div></div>;
   }
 
@@ -345,7 +345,9 @@ function BudgetChart({
       <div className="flex justify-between">
         <div className={`flex w-full items-center justify-evenly`}>
           <div className="text-center">
-            <div className="font-semibold text-lg">PAY FREQUENCY</div>
+            <div className="font-semibold text-md font-raleway">
+              PAY FREQUENCY
+            </div>
             <div className="flex items-center">
               <div className="font-bold text-2xl">{payFrequency}</div>
               <PencilAltIcon
@@ -357,7 +359,9 @@ function BudgetChart({
 
           <>
             <div className="flex flex-col items-center">
-              <div className="font-semibold text-lg">MONTHLY INCOME</div>
+              <div className="font-semibold text-md font-raleway">
+                MONTHLY INCOME
+              </div>
               <div className="flex justify-center items-center">
                 {editingMonthlyAmount ? (
                   <>
@@ -398,7 +402,9 @@ function BudgetChart({
               </div>
             </div>
             <div className="text-center">
-              <div className="font-semibold text-lg">AMOUNT REMAINING</div>
+              <div className="font-semibold text-md font-raleway">
+                AMOUNT REMAINING
+              </div>
               <div
                 className={`font-bold text-3xl ${
                   parseInt((monthlyAmount - grandTotal).toFixed(0)) < 0 &&
@@ -409,13 +415,15 @@ function BudgetChart({
               </div>
             </div>
             <div className="text-center">
-              <div className="font-semibold text-lg">AMOUNT USED</div>
+              <div className="font-semibold text-md font-raleway">
+                AMOUNT USED
+              </div>
               <div className="font-bold text-3xl">
                 {"$" + grandTotal.toFixed(0)}
               </div>
             </div>
             <div className="text-center">
-              <div className="font-semibold text-lg">% USED</div>
+              <div className="font-semibold  text-md font-raleway">% USED</div>
               <div className="font-bold text-3xl">
                 {(monthlyAmount == 0
                   ? 0
