@@ -44,9 +44,11 @@ function AutomationReviewModal({
   };
 
   return (
-    <div className="h-[600px] flex flex-col m-5 relative">
+    <div className="h-[600px] flex flex-col mt-1 m-5 relative">
       {/* Header */}
-      <div className="text-center text-2xl">Budget Automation Review</div>
+      <div className="text-center text-3xl font-bold">
+        Budget Automation Review
+      </div>
 
       {/* Next Auto Runs List */}
       <div className="flex flex-col mt-5">

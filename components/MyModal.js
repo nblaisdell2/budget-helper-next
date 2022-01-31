@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import AutomationModal from "./AutomationModal";
 import CategoryModal from "./CategoryModal";
 import SetupBudgetModal from "./SetupBudgetModal";
+import XIcon from "@heroicons/react/outline/XIcon";
 
 const customStyles = {
   content: {
@@ -27,7 +28,6 @@ function MyModal(props) {
     // references are now sync'd and can be accessed.
   };
   const closeModal = () => {
-    // setIsOpen(false);
     props.setCurrModal(null);
   };
 
@@ -35,29 +35,52 @@ function MyModal(props) {
     setIsOpen(props.currModal != null);
   }, [props.currModal]);
 
+  console.log("About to render modal");
+  console.log(props.currModal);
+
   return (
     <Modal
       isOpen={modalIsOpen}
       onAfterOpen={afterOpenModal}
       onRequestClose={closeModal}
       style={customStyles}
+      closeTimeoutMS={500}
       contentLabel="Example Modal"
+      className={`${props.currModal == null ? "hidden" : ""}`}
     >
+      <div className="flex justify-end" onClick={closeModal}>
+        <XIcon className="h-[30px] w-[30px] hover:cursor-pointer hover:text-red-500" />
+      </div>
+
+      <style jsx global>{`
+        .ReactModal__Overlay {
+          opacity: 0;
+          transform: translateX(0px);
+          transition: all 500ms ease-in-out;
+        }
+
+        .ReactModal__Overlay--after-open {
+          opacity: 1;
+          transform: translateX(0px);
+        }
+
+        .ReactModal__Overlay--before-close {
+          opacity: 0;
+          transform: translateX(0px);
+        }
+      `}</style>
+
       {props.currModal &&
         ((props.currModal == "Categories" && (
           <CategoryModal
             categories={props.categories}
             addToList={props.addToList}
-            closeModal={closeModal}
           />
         )) ||
           (props.currModal == "Automation" && (
             <AutomationModal
               userList={props.userCategoryList}
-              closeModal={closeModal}
               userDetails={props.userDetails}
-              // userID={props.userID}
-              // budgetID={props.budgetID}
               setUserDetails={props.setUserDetails}
               nextAutoRuns={props.nextAutoRuns}
               setNextAutoRuns={props.setNextAutoRuns}
@@ -66,7 +89,6 @@ function MyModal(props) {
           )) ||
           (props.currModal == "Initialize" && (
             <SetupBudgetModal
-              closeModal={closeModal}
               userDetails={props.userDetails}
               setUserDetails={props.setUserDetails}
               sixMonthDetails={props.sixMonthDetails}

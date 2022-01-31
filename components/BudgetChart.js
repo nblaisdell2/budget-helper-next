@@ -446,7 +446,7 @@ function BudgetChart({
         <div></div>
       ) : (
         <div className="text-center h-[530px]">
-          <div className="mt-1">
+          <div className="mt-10">
             <Chart
               chartType="BarChart"
               data={chartDataGroup()}

@@ -1,5 +1,21 @@
+import CalendarIcon from "@heroicons/react/solid/CalendarIcon";
+import GiftIcon from "@heroicons/react/solid/GiftIcon";
+import ChartBarIcon from "@heroicons/react/solid/ChartBarIcon";
+
 function Widgets({ name, changeWidget }) {
   const widgetItem = (name, selected) => {
+    let myIcon = null;
+    switch (name) {
+      case "Budget Chart":
+        myIcon = <ChartBarIcon height={30} width={30} />;
+        break;
+      case "Six Month Details":
+        myIcon = <CalendarIcon height={30} width={30} />;
+        break;
+      case "Upcoming Expenses":
+        myIcon = <GiftIcon height={30} width={30} />;
+        break;
+    }
     return (
       <button
         onClick={() => changeWidget(name)}
@@ -9,7 +25,10 @@ function Widgets({ name, changeWidget }) {
             : "hover:bg-blue-300 hover:text-white"
         }`}
       >
-        {name}
+        <div className="text-center">
+          <div className="flex justify-center">{myIcon}</div>
+          <div>{name}</div>
+        </div>
       </button>
     );
   };

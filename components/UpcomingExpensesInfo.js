@@ -196,7 +196,7 @@ function UpcomingExpensesInfo({
       </div>
 
       {/* What if I save more? table */}
-      <div className="mt-10">
+      <div className="mt-24">
         <div className="text-center text-2xl underline font-bold mb-2">
           What If I Save More?
         </div>

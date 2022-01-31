@@ -68,7 +68,7 @@ function ChartInfo({
   };
 
   return (
-    <div className="w-2/5 border-2 border-gray-400 p-5 rounded-3xl ml-3 shadow-2xl h-[640px] bg-white">
+    <div className="w-2/5 border-2 border-gray-400 p-5 rounded-3xl ml-3 mr-6 shadow-2xl h-[720px] bg-white">
       {renderChartInfo(type, categories)}
     </div>
   );

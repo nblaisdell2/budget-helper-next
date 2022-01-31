@@ -1,89 +1,55 @@
-import ynab_config from "../pages/config/ynab_oauth_config.json";
-import { useUser } from "@auth0/nextjs-auth0";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import Sidebar from "react-sidebar";
+import MySidebar from "./MySidebar";
 
 function Header(props) {
-  const { isLoading, user } = useUser();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarStyles, setSidebarStyles] = useState({
+    sidebar: {
+      background: "white",
+    },
+    root: {
+      zIndex: -1,
+    },
+  });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  let signIn;
-  let loggedInAs;
-  let connectToYNAB;
-  if (user) {
-    signIn = (
-      <a className="hover:underline" href="/api/auth/logout">
-        Logout
-      </a>
-    );
-
-    loggedInAs = <h2>User: {user.nickname || user.email}</h2>;
-
-    if (
-      props.accessToken === null ||
-      props.accessToken === undefined ||
-      props.accessToken === "undefined"
-    ) {
-      connectToYNAB = (
-        <a
-          className="hover:underline"
-          href={`https://app.youneedabudget.com/oauth/authorize?client_id=${ynab_config.CLIENT_ID}&redirect_uri=${ynab_config.REDIRECT_URI}&response_type=code`}
-        >
-          Connect to YNAB
-        </a>
-      );
+  useEffect(() => {
+    let newStyles = { ...sidebarStyles };
+    if (sidebarOpen) {
+      newStyles.root.zIndex = 10;
+    } else {
+      newStyles.root.zIndex = -1;
     }
-  } else {
-    signIn = (
-      <a className="hover:underline" href="/api/auth/login">
-        Login
-      </a>
-    );
-
-    if (
-      props.accessToken === null ||
-      props.accessToken === undefined ||
-      props.accessToken === "undefined"
-    ) {
-      connectToYNAB = (
-        <a
-          className="hover:underline"
-          href={`https://app.youneedabudget.com/oauth/authorize?client_id=${ynab_config.CLIENT_ID}&redirect_uri=${ynab_config.REDIRECT_URI}&response_type=code`}
-        >
-          Connect to YNAB
-        </a>
-      );
-    }
-  }
+    setSidebarStyles(newStyles);
+  }, [sidebarOpen]);
 
   return (
-    <header className="flex flex-row justify-between">
-      <div className="flex items-center mx-2">
+    <header className="flex justify-end bg-blue-900 p-1 pr-6">
+      <div
+        className="hover:cursor-pointer flex items-center"
+        onClick={() => setSidebarOpen(true)}
+      >
+        <h2 className="mr-2 text-3xl font-cinzel text-white">EverCent</h2>
         <Image
           src="/evercent_logo.png"
-          className=" object-contain"
-          width={120}
-          height={120}
+          className="object-contain"
+          width={50}
+          height={50}
           alt="My Logo"
         />
-        <h2 className="ml-4 text-5xl font-cinzel">EverCent</h2>
       </div>
 
-      <nav className="flex">
-        <div className="flex items-center space-x-10">
-          <a className="hover:underline" href="/">
-            Home
-          </a>
-          <a className="hover:underline" href="/YNABTutorial">
-            Tutorial
-          </a>
-          {connectToYNAB}
-          {signIn}
-          {loggedInAs}
-        </div>
-      </nav>
+      <div>
+        <Sidebar
+          sidebar={<MySidebar accToken={props.accessToken} />}
+          children={<></>}
+          open={sidebarOpen}
+          onSetOpen={setSidebarOpen}
+          styles={sidebarStyles}
+          pullRight={true}
+        />
+      </div>
     </header>
   );
 }

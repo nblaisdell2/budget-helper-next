@@ -58,7 +58,7 @@ function ChartSection({
   }
 
   return (
-    <div className="w-3/5 border-2 border-gray-400 p-5 rounded-3xl mr-3 shadow-2xl h-[640px] bg-white">
+    <div className="w-3/5 border-2 border-gray-400 p-5 rounded-3xl ml-6 mr-3 shadow-2xl h-[720px] bg-white">
       {renderChartDetails(type)}
     </div>
   );

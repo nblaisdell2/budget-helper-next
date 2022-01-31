@@ -7,7 +7,6 @@ import { useUser } from "@auth0/nextjs-auth0";
 import ynab_config from "../pages/config/ynab_oauth_config.json";
 
 function SetupBudgetModal({
-  closeModal,
   userDetails,
   setUserDetails,
   sixMonthDetails,

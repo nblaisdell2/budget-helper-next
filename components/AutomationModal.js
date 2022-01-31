@@ -6,7 +6,6 @@ import Router from "next/router";
 
 function AutomationModal({
   userList,
-  closeModal,
   userDetails,
   setUserDetails,
   nextAutoRuns,
@@ -46,7 +45,7 @@ function AutomationModal({
 
       Router.reload(window.location.pathname);
     } else {
-      closeModal();
+      // closeModal();
     }
   };
 
@@ -72,7 +71,6 @@ function AutomationModal({
   return (
     <AutomationEditModal
       userList={userList}
-      closeModal={closeModal}
       userDetails={userDetails}
       setUserDetails={setUserDetails}
       setShowReview={setShowReview}

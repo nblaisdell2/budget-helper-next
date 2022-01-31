@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useUser } from "@auth0/nextjs-auth0";
 import Axios from "axios";
 
@@ -216,6 +217,9 @@ function BudgetChartInfo({
         return a + getCategoryAmountModified(b);
       }, 0);
 
+      console.log("Curr item");
+      console.log(currItem);
+
       listItems.push({
         key: currItem.id,
         id: currItem.id,
@@ -230,6 +234,8 @@ function BudgetChartInfo({
               )) + "%",
         isParent: true,
         isExpanded: currItem.isExpanded,
+        isRegular: null,
+        isUpcoming: null,
         fullCategory: null,
       });
 
@@ -257,6 +263,8 @@ function BudgetChartInfo({
             ).toFixed(2) + "%",
           isParent: false,
           isExpanded: currItem.isExpanded,
+          isRegular: currCat.expenseType !== null,
+          isUpcoming: currCat.upcomingExpense !== null,
           fullCategory: currCat,
         });
       }
@@ -286,6 +294,9 @@ function BudgetChartInfo({
   if (Object.keys(categories).length == 0) {
     return (
       <div className="h-full text-center flex flex-col justify-center">
+        <div>
+          <Image src="/ynab_logo.png" height="200px" width="200px" />
+        </div>
         <div className="text-2xl">
           Please Connect to YNAB to get Category Details
         </div>
@@ -338,13 +349,16 @@ function BudgetChartInfo({
         )}
       </div>
 
-      <div className="flex flex-col my-2 h-[500px] overflow-y-auto">
+      <div className="flex flex-col my-2 h-[580px] overflow-y-auto">
         <table className="relative table-auto">
           <thead>
             <tr>
               <th className="sticky top-0 bg-white p-2"></th>
               <th className="text-left sticky top-0 bg-white p-2 text-xl">
                 Category
+              </th>
+              <th className="text-center sticky top-0 bg-white p-2 text-xl">
+                Options
               </th>
               <th className="text-right sticky top-0 bg-white p-2 text-xl">
                 Amount
@@ -366,6 +380,8 @@ function BudgetChartInfo({
                   percentIncome={item.percentIncome}
                   isParent={item.isParent}
                   isExpanded={item.isExpanded}
+                  isRegular={item.isRegular}
+                  isUpcoming={item.isUpcoming}
                   fullCategory={item.fullCategory}
                   setSelectedCategory={setSelectedCategory}
                   userCategoryList={userCategoryList}
@@ -398,7 +414,7 @@ function BudgetChartInfo({
           className="hover:underline cursor-pointer"
           onClick={() => setModalItem("Categories")}
         >
-          Add YNAB Categories
+          Add/Remove YNAB Categories
         </h2>
       </div>
 

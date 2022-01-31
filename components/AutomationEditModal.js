@@ -5,7 +5,6 @@ import DateTimePicker from "./DateTimePicker";
 
 function AutomationEditModal({
   userList,
-  closeModal,
   userDetails,
   setUserDetails,
   setShowReview,

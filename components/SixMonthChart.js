@@ -77,7 +77,7 @@ function SixMonthChart({ sixMonthDetails }) {
         Regular Expenses
       </div>
 
-      <div className="h-[550px] overflow-y-auto">
+      <div className="h-[550px] overflow-y-auto mt-10">
         {sixMonthDetails.categories.length == 0 ? (
           <div>
             <div className="text-center">
