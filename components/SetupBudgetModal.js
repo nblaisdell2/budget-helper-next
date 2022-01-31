@@ -74,7 +74,12 @@ function SetupBudgetModal({
         let currMonthDivisor = currCat.expenseMonthsDivisor;
         let divisorChanged = false;
         let startMonth = new Date();
+        let currMonth = null;
+        let mthYear = new Date().getFullYear();
+        let mthMth = new Date().getMonth();
         let monthArr = [];
+
+        currMonth = new Date(mthYear, mthMth, 1);
 
         if (currCat.balance > 0 || currCat.monthsAhead > 0) {
           for (let j = 0; j < currCat.monthsAhead; j++) {
@@ -105,14 +110,28 @@ function SetupBudgetModal({
                 toggleInclude: currCat.toggleInclude,
                 monthNum: j,
                 month:
-                  startMonth.toLocaleString("default", { month: "long" }) +
+                  currMonth.toLocaleString("default", { month: "long" }) +
                   " " +
-                  startMonth.getFullYear(),
+                  currMonth.getFullYear(),
                 numMonthsAhead: "",
                 totalAmount: "$" + currAmt.toFixed(2),
               });
 
-              startMonth.setMonth(startMonth.getMonth() + 1);
+              console.log("Start Month");
+              console.log(currMonth);
+              // startMonth.setMonth(startMonth.getMonth() + 1);
+              mthMth += 1;
+              if (mthMth > 11) {
+                mthMth = 0;
+                mthYear += 1;
+              }
+
+              currMonth = new Date(mthYear, mthMth, 1);
+              // currMonth = new Date(
+              //   startMonth.setMonth(startMonth.getMonth() + 1)
+              // );
+              console.log("Start Month - AFTER");
+              console.log(currMonth);
             } else {
               if (monthArr?.length == 0) {
                 monthArr.push({
@@ -123,9 +142,9 @@ function SetupBudgetModal({
                   toggleInclude: currCat.toggleInclude,
                   monthNum: j,
                   month:
-                    startMonth.toLocaleString("default", { month: "long" }) +
+                    currMonth.toLocaleString("default", { month: "long" }) +
                     " " +
-                    startMonth.getFullYear(),
+                    currMonth.getFullYear(),
                   numMonthsAhead: "",
                   totalAmount: "$" + catTotalAmt.toFixed(2),
                 });
@@ -153,6 +172,9 @@ function SetupBudgetModal({
         catsWithMonths.push(...monthArr);
       }
     }
+
+    console.log("catsWithMonths");
+    console.log(catsWithMonths);
 
     return catsWithMonths;
   };
@@ -427,7 +449,13 @@ function SetupBudgetModal({
       {/* Amount Remaining Section */}
       <div className="text-center">
         <div className="text-4xl font-bold ">Amount Remaining</div>
-        <div className="text-4xl font-bold text-green-500">
+        <div
+          className={`font-bold text-4xl ${
+            parseInt(startAmt.toFixed(0)) < 0
+              ? "text-red-500"
+              : "text-green-500"
+          }`}
+        >
           {"$" + startAmt}
         </div>
       </div>
