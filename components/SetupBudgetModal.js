@@ -117,9 +117,6 @@ function SetupBudgetModal({
                 totalAmount: "$" + currAmt.toFixed(2),
               });
 
-              console.log("Start Month");
-              console.log(currMonth);
-              // startMonth.setMonth(startMonth.getMonth() + 1);
               mthMth += 1;
               if (mthMth > 11) {
                 mthMth = 0;
@@ -127,11 +124,6 @@ function SetupBudgetModal({
               }
 
               currMonth = new Date(mthYear, mthMth, 1);
-              // currMonth = new Date(
-              //   startMonth.setMonth(startMonth.getMonth() + 1)
-              // );
-              console.log("Start Month - AFTER");
-              console.log(currMonth);
             } else {
               if (monthArr?.length == 0) {
                 monthArr.push({
@@ -243,7 +235,6 @@ function SetupBudgetModal({
                 })
                   .then((response) => {
                     console.log("Added data to YNAB successfully!");
-                    // console.log(response);
                     console.log(response.headers["x-rate-limit"]);
                     let rateLim = response.headers["x-rate-limit"];
                     let rateLimLeft = parseInt(
@@ -251,9 +242,6 @@ function SetupBudgetModal({
                     );
                     if (rateLimLeft >= 180) {
                       getNewTokens(currRefToken).then((data) => {
-                        // console.log("What did I get for data?");
-                        // console.log(data);
-
                         currAccToken = data[0];
                         currRefToken = data[1];
                       });

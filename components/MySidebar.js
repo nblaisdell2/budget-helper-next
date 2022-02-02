@@ -11,7 +11,6 @@ import ynab_config from "../pages/config/ynab_oauth_config.json";
 function MySidebar({ accToken }) {
   const { user } = useUser();
   const router = useRouter();
-  console.log(router);
 
   let isConnectedToYNAB = accToken != null;
 

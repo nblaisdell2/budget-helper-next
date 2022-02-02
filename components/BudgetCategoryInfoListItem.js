@@ -17,13 +17,6 @@ function BudgetCategoryInfoListItem({
   userCategoryList,
   setUserCategoryList,
 }) {
-  console.log("Category");
-  console.log(category);
-  console.log("isRegular");
-  console.log(isRegular);
-  console.log("isUpcoming");
-  console.log(isUpcoming);
-
   return (
     (isParent && (
       <tr

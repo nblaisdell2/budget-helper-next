@@ -423,9 +423,6 @@ function App() {
       newCats.push(...currCats);
     }
 
-    console.log("SETTING SIX MONTHS AGAIN!");
-    console.log(newCats);
-
     sixMoDt.categories = newCats;
 
     sixMoDt.targetMetCount = getSixMonthTargetMetCount(

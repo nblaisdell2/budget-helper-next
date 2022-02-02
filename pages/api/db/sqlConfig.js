@@ -53,7 +53,7 @@ function query(res, spName, params) {
       return request.execute(spName);
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       let dbResults = null;
       // if (result.recordsets.length > 1) {
 

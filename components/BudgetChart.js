@@ -26,7 +26,10 @@ function BudgetChart({
   const [currSelectedColumn, setCurrSelectedColumn] = useState(null);
 
   useEffect(() => {
-    if (!isLoading && Object.keys(userDetails).length > 0) {
+    console.log("AM I IN HERE?");
+    console.log(userDetails);
+
+    if (!isLoading && Object?.keys(userDetails).length > 0) {
       setMonthlyAmount(userDetails.MonthlyAmount);
       setPayFrequency(userDetails.PayFrequency || payFrequency);
       setNextPaydate(
@@ -38,9 +41,7 @@ function BudgetChart({
   }, [userDetails]);
 
   useEffect(() => {
-    console.log("Am i getting new amounts?");
     if (userCategoryList.length > 0) {
-      console.log("getting new amounts");
       let newGrandTotal = 0;
       for (let i = 0; i < userCategoryList.length; i++) {
         for (let j = 0; j < userCategoryList[i].categories.length; j++) {
@@ -225,10 +226,6 @@ function BudgetChart({
         NextPaydate: nextPaydate,
       })
         .then((response) => {
-          console.log(
-            "Got response from database. Checking for a rowcount for deleted automation runs."
-          );
-          console.log(response);
           if (
             response.data &&
             response.data[0] &&
@@ -246,11 +243,6 @@ function BudgetChart({
 
     setEditingFrequency(false);
   };
-
-  console.log("pay frequency");
-  console.log(payFrequency);
-  console.log("next paydate");
-  console.log(nextPaydate);
 
   if (isLoading) {
     return <div></div>;

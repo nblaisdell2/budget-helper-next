@@ -201,7 +201,7 @@ function BudgetChartInfo({
     let numDays = daysBetween(dtToday, dtNextRun);
     if (numDays.toFixed(0) == 0) {
       strNextRun +=
-        " (" + (dtToday.getHours() - dtNextRun.getHours()) + " hours)";
+        " (" + (dtNextRun.getHours() - dtToday.getHours()) + " hours)";
     } else {
       strNextRun += " (" + numDays.toFixed(0) + " days)";
     }
@@ -216,9 +216,6 @@ function BudgetChartInfo({
       let groupTotalModified = currItem.categories.reduce((a, b) => {
         return a + getCategoryAmountModified(b);
       }, 0);
-
-      console.log("Curr item");
-      console.log(currItem);
 
       listItems.push({
         key: currItem.id,

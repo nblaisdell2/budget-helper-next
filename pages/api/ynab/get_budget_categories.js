@@ -66,9 +66,6 @@ export default function handler(req, res) {
     })
     .then(() => {
       ynab.get_budget_months(req.query.access_token).then((response) => {
-        console.log("WHAT IS THE REPONSE");
-        console.log(response);
-
         monthDetails = response.data.budget.months;
 
         let newMonthDetails = [];
@@ -90,8 +87,6 @@ export default function handler(req, res) {
               (ynMonth.getFullYear() == today.getFullYear() &&
                 ynMonth.getMonth() + 1 >= today.getMonth() + 1)
             ) {
-              console.log("   ADDING MONTH!");
-              console.log("   " + monthDetails[i].month);
               newMonthDetails.push(monthDetails[i]);
             }
           }

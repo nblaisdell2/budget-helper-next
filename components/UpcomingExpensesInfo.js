@@ -20,12 +20,7 @@ function UpcomingExpensesInfo({
 }) {
   const [extraAmount, setExtraAmount] = useState(0);
 
-  console.log("CHECKING UPCOMING");
-  console.log(upcoming);
-
   if (upExpenseInd && Object.keys(upExpenseInd).length == 0) {
-    console.log("at least I've got this");
-    console.log(upcoming);
     if (upcoming.length > 0) {
       return (
         <div className="flex justify-center mt-20 text-2xl">
@@ -86,18 +81,12 @@ function UpcomingExpensesInfo({
     );
   }
 
-  console.log("individual");
-  console.log(upExpenseInd);
   let catDetails = getAllCategories(userCategoryList).find(
     (x) =>
       x.id == upExpenseInd.ItemID &&
       x.categoryGroupID == upExpenseInd.ItemGroupID
   );
-  console.log("cat details");
-  console.log(catDetails);
   let ynabBalance = getLatestBalance(upExpenseInd.ItemID);
-  console.log("curr ynab balance");
-  console.log(ynabBalance);
   let percentSaved = (ynabBalance / catDetails.upcomingExpense) * 100;
   if (percentSaved > 100) {
     percentSaved = 100;
@@ -215,10 +204,6 @@ function UpcomingExpensesInfo({
 
             <tbody>
               {[100, 200, 300, 400, 500].map((v, i) => {
-                console.log(
-                  "getting upcoming expenses details for " +
-                    upExpenseInd.ItemName
-                );
                 let data = calculateUpcomingExpensesForCategory(
                   catDetails,
                   dayOfWeek,

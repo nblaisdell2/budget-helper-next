@@ -35,9 +35,6 @@ function MyModal(props) {
     setIsOpen(props.currModal != null);
   }, [props.currModal]);
 
-  console.log("About to render modal");
-  console.log(props.currModal);
-
   return (
     <Modal
       isOpen={modalIsOpen}
